@@ -1,0 +1,87 @@
+<!-- 关于我 -->
+<ion-view hide-nav-bar="true" view-title="我">
+	<!-- 信息 -->
+	<ion-header-bar class="mfblue about-head" style="height:240px;flex-direction: column;justify-content: flex-start;align-items: center;padding: 0;padding-top: 30px;">
+		<!--二维码-->
+		<div style="position: absolute;top: 9px;right: 0;padding: 16px;margin: 0;">
+			<i style="margin-left:5px;font-size:24px;cursor: pointer;" class="icon zwicon icon-qrcode" ng-click="operate({type: 'qrcode'})"></i>
+		</div>
+		<!--头像-->
+		<div style="text-align: center;margin: 0;">
+			<img class="user-avatar-large" ng-src="{{$root.USER.photo}}" img-load-error="img/exception/user-error.png" ui-sref="myInfo"/>
+		</div>
+		<!-- 名称 -->
+		<div style="text-align: center;color:#fff;font-size: 18px;padding: 6px 0;margin: 0;width: 100%;">
+            <span style="position: relative;" ng-style="{left: $root.USER.medals.length>0 ? '5px' : 0}">
+                <i ng-bind="$root.USER.username"></i>
+                <!--勋章-->
+                <i ng-click="showMedalPopup($event)">
+                    <img style="width: 12px;vertical-align: middle;" ng-repeat="medal in $root.USER.medals" ng-src="{{$root.CONFIG.server+medal.url}}" img-load-error="img/exception/user-error.png"/>
+                </i>
+            </span>
+			<!--简介-->
+			<p style="font-size: 12px;margin: auto;max-width: 70%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{$root.USER.sign ? '简介：' + $root.USER.sign : '暂无简介'}}</p>
+		</div>
+		<!--使用空间-->
+		<div ng-if="userTotalCloudSpace" style="padding: 6px 0;margin: 0;">
+			<div style="width: 220px;height: 6px;border-radius: 20px;position: relative;margin: 0px;background: #fff;overflow: hidden;">
+				<div style="position: absolute;top: 0;left: 0;height: 100%;width: 36%;background: orange;border-radius: 8px;" ng-style="{width: spacePercent ? spacePercent+'%': 0}"></div>
+			</div>
+			<div style="font-size: 12px;text-align: center;">
+				<span>已用空间</span>
+				<span>：{{userTotalCloudSpace}}中的{{userUsedCloudSpace}}</span>
+			</div>
+		</div>
+	</ion-header-bar>
+	<!-- 菜单 -->
+	<ion-content class="stable-bg" has-bouncing="true" style="top: 240px;overflow-y: hidden;">
+		<ion-refresher on-refresh="init()"></ion-refresher>
+		<ion-list class="about-list">
+			<!--应用设置向导-->
+			<ion-item ng-if="!isIos" class="item-icon-left item-icon-right" ui-sref="wizard" style="border-top: 0;border-bottom: 0;cursor: pointer;">
+				<i class="icon ion-settings calm"></i>
+				<h2>应用设置说明</h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<div style="height: 20px;"></div>
+
+			<!-- 掌秀 -->
+			<ion-item class="item-icon-left item-icon-right" ng-click="operate({type:'store'})" style="border-top: 0;cursor: pointer;">
+				<i class="icon"><img src="img/about/shopping.png" style="width: 30px;"/></i>
+				<h2 style="color:#5D5D28">购买掌秀</h2>
+				<span ng-if="showJdTip > 0" class="badge badge-assertive" ng-bind="showJdTip"></span>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<!--设置掌秀-->
+			<ion-item ng-if="isApp" class="item-icon-left item-icon-right" ui-sref="zxHelpTip" style="cursor: pointer;">
+				<i class="icon"><img src="img/about/zx.png" style="width: 30px;"/></i>
+				<h2>掌秀硬件设置</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<!--绑定掌秀SN码-->
+			<ion-item ng-if="isApp" class="item-icon-left item-icon-right" ui-sref="bingSN" style="border-bottom: 0;cursor: pointer;">
+				<i class="icon"><img src="img/about/scan.png" style="width: 30px;"/></i>
+				<h2>领取云空间奖励</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<div style="height: 20px;"></div>
+
+			<!--设置掌文-->
+			<ion-item class="item-icon-left item-icon-right" ui-sref="setting" style="border-top: 0;cursor: pointer;">
+				<i class="icon"><img src="img/about/zw.png" style="width: 30px;"/></i>
+				<h2>掌文APP设置</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<!--关于掌文-->
+			<ion-item class="item-icon-left item-icon-right" ui-sref="aboutApp" style="border-bottom: 0;cursor: pointer;">
+				<i class="icon"><img src="img/about/info.png" style="width: 30px;"/></i>
+				<h2>
+					<span>关于掌文</span>
+					<span ng-if="isApp && updateVersion > 0" class="badge badge-assertive" ng-bind="updateVersion"></span>
+					<span ng-if="isApp && updateVersion != 1 " style="float:right;color:#666;font-size: 14px;" ng-if="updateVersion > 0">{{version}}</span>
+				</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

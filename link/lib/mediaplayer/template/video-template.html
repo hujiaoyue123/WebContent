@@ -1,0 +1,43 @@
+<!--video模板-->
+<div class="screen">
+<video-container class="video-container">
+<video></video>
+<!-- 中央操作板 -->
+<div class="video-control-panel" ng-click="showControlBar = !showControlBar">
+	<!-- 播放暂停 -->
+	<div class="video-center-button" ng-show="!playing && showControlBar" ng-click="togglePlayback()">
+		<i class="mediaIcon icon-ion-ios-play"></i>
+	</div>
+	<!-- 缓冲中 -->
+	<div ng-show="buffering && playing" ng-include="'lib/mediaplayer/template/loading-liner.html'"></div>
+</div>
+<!-- 底部栏 -->
+<div class="video-control-bar" video-hide-bar="showControlBar" position="down">
+	<!--播放暂停-->
+	<div class="video-playback" ng-click="togglePlayback()">
+		<i class="mediaIcon" ng-class="{'icon-ion-ios-play': !playing,'icon-ion-ios-pause': playing}"></i>
+	</div>
+	<!-- 播放时间/总时长 -->
+	<div class="video-current-time">{{currentTime}}</div>
+	<div class="video-duration-time">{{durationTime}}</div>
+	<!-- 时间轴 -->
+	<div class="video-timeline" seek-bar>
+		<div class="default">
+			<div class="buffer" ng-style="{'width': bufferedBarWidth}"></div>
+			<div class="progress" ng-style="{'width': processBarWidth}"></div>
+		</div>
+	</div>
+	<!-- 全屏-->
+	<div class="video-fullscreen" ng-click="toggleFullScreen()">
+		<i class="mediaIcon" ng-class="{'icon-ion-android-expand': !isFullScreen,'icon-ion-android-contract': isFullScreen}"></i>
+	</div>
+</div>
+<!-- 底部进度 -->
+<div ng-show="showBottomTimeline && !showControlBar" class="video-offtimeline">
+	<div class="default">
+		<div class="buffer" ng-style="{'width': bufferedBarWidth}"></div>
+		<div class="progress" ng-style="{'width': processBarWidth}"></div>
+	</div>
+</div>
+</video-container>
+</div>

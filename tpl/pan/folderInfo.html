@@ -1,0 +1,102 @@
+<!-- 文件夹详情 -->
+<ion-view hide-back-button="true" view-title="文件夹详情">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button ng-click="$ionicGoBack()" class="button back-button buttons button-clear header-item">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<!-- content -->
+	<ion-content class="stable-bg">
+		<div class="list">
+			<!-- 文件夹名称 -->
+			<div class="item item-avatar" style="padding-left: 88px;height: 72px;">
+				<img ng-src="{{folder.src}}" style="border-radius:0;width:auto;height:auto;max-width: 54px;max-height: 54px;"/>
+				<h2 ng-bind="folder.name" style="display: flex;align-items: center;height: 100%;color: #525151;"></h2>
+			</div>
+			<!-- 创建人 -->	
+			<div class="item item-icon-right">
+				<h2 style="color: #525151;">创建人</h2>
+				<i class="icon" ng-bind="folder.username" style="font-size: 14px;color: #9E9E9E;"></i>
+			</div>
+			<!-- 创建时间 -->
+			<div class="item item-icon-right">
+				<h2 style="color: #525151;">创建时间 </h2>
+				<i class="icon" ng-bind="folder.createtime" style="font-size: 14px;color: #9E9E9E;"></i>
+			</div>
+			<!-- 文件位置(只在未审核状态下显示) -->
+			<div ng-if="folder.isaudit == 1" class="item" style="padding-top: 8px;padding-bottom: 8px;">
+				<h2 style="color: #525151;">文件位置</h2>
+				<p style="white-space: normal;color: #9E9E9E;">
+					<span ng-repeat="path in folder.pathList">
+						<span ng-bind="path.name">{{path.name}}</span>
+						<span ng-if="$index < folder.pathList.length-1">/</span>
+					</span>
+				</p>
+			</div>
+			<!-- 文件数 -->
+			<div class="item item-icon-right" ng-click="enterShowPan(folder)">
+				<h2 style="color: #525151;">文件数</h2>
+				<i class="icon" style="font-size: 14px;color: #9E9E9E;">
+					<span ng-bind="folder.size" style="margin-right: 10px;"></span>
+					<i class="icon-accessory ion-ios-arrow-right"></i>
+				</i>
+			</div>
+			<!-- 仅文件库有标识 -->
+			<div ng-if="folder.foldertype == 'org' || folder.foldertype == 'dept'">
+				<!-- 针对组织文件夹 -->
+				<div ng-if="(folder.competence == 1 || folder.createuserid == $root.USER.id) && showCompetence()">
+					<!-- 公开 -->
+					<ion-toggle ng-if="folder.foldertype != 'org'" ng-model="folder.public" ng-true-value="'1' || 1" ng-false-value="'0' || 0" toggle-class="toggle-balanced" ng-change="setPublic(folder)">是否公开</ion-toggle>
+					<!-- 需要审核 -->
+					<ion-toggle ng-model="folder.audit" ng-true-value="'1' || 1" ng-false-value="'0' || 0" toggle-class="toggle-balanced" ng-change="setAudit(folder)">是否需要审核</ion-toggle>
+				</div>
+				<!-- 没权限 -->
+				<div ng-if="folder.competence == 0 && folder.createuserid != $root.USER.id">
+					<ion-item ng-if="folder.foldertype != 'org'" class="item-icon-right">
+						<h2>是否公开</h2>
+						<i class="icon" style="font-size:12px;color: gray;">
+							<span ng-if="folder.public == 1">已公开</span>
+							<span ng-if="folder.public == 0">不公开</span>
+						</i>
+					</ion-item>
+					<ion-item class="item-icon-right">
+						<h2>是否需要审核</h2>
+						<i class="icon" style="font-size:12px;color: gray;">
+							<span ng-if="folder.audit == 1">需要审核</span>
+							<span ng-if="folder.audit == 0">不需要审核</span>
+						</i>
+					</ion-item>
+				</div>
+			</div>
+		</div>
+	</ion-content>
+	<!-- footer -->
+	<ion-footer-bar ng-if="folder.isaudit == 0 &&(folder.competence == 1 || folder.createuserid == $root.USER.id)" class="mfblue hx-flex-justify-content" style="padding:0;padding-top: 2px;color: #fff;">
+		<a class="tab-item" style="opacity: 1;" ng-click="renameFolder(folder)" >
+			<i class="icon ion-ios-compose-outline" style="height: 20px;font-size: 16px;"></i>
+			<span class="tab-title" style="font-size: 12px;">重命名</span>
+		</a>
+		<a class="tab-item" style="opacity: 1;" ng-click="moveFolder(folder)">
+			<i class="icon ion-android-bicycle" style="height: 20px;font-size: 20px;"></i>
+			<span class="tab-title" style="font-size: 12px;">移动</span>
+		</a>
+		<a class="tab-item" style="opacity: 1;" ng-click="deleteFolder(folder)">
+			<i class="icon ion-ios-trash" style="height: 20px;font-size: 20px;"></i>
+			<span class="tab-title" style="font-size: 12px;">删除</span>
+		</a>
+	</ion-footer-bar>	
+	<!-- 审批: 未审批状态,并且有审核权限-->
+	<div ng-if="folder.isaudit == 1 && folder.approval == 1" class="bar bar-footer mfblue hx-flex-justify-content" style="padding:0;padding-top: 2px;color: #fff;">
+		<a class="tab-item" style="opacity: 1;" ng-click="auditFolder('refuse')">
+			<i class="icon ion-android-close" style="height: 20px;font-size: 20px;"></i>
+			<span class="tab-title" style="font-size: 12px;">拒绝</span>
+		</a>
+		 <a class="tab-item" style="opacity: 1;" ng-click="auditFolder('pass')">
+			<i class="icon ion-android-done" style="height: 20px;font-size: 20px;"></i>
+			<span class="tab-title" style="font-size: 12px;">审批通过</span>
+		</a>
+	</div>
+</ion-view>

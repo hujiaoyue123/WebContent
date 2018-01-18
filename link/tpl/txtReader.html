@@ -1,0 +1,12 @@
+<ion-view hide-nav-bar="true">
+	<!-- 顶部栏 -->
+	<div class="bar bar-header preview-bar mfblue" toggle-menu="showMenu" position="top">
+		<button class="button button-clear icon ion-ios-arrow-back" style="color: #fff;" ng-click="$ionicHistory.goBack()">
+			<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+		</button>
+		<h2 class="title" ng-bind="$stateParams.filename"></h2>
+	</div>
+	<ion-content ng-click="toggle()" overflow-scroll="true" style="background: #ffffff;">
+		<p ng-if="text" ng-bind="text" class="user-can-select" style="padding: 44px 20px 20px;font-size: 14px;color: #555;letter-spacing: 0.5px;white-space: pre-line;"></p>
+	</ion-content>
+</ion-view>

@@ -1,0 +1,6 @@
+<!-- 媒体 -->
+<ion-modal-view ng-click="modal.remove()" style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;width: 100%;display: flex;align-items: center;justify-content: center;background: rgba(0, 0, 0, 0.7);">
+        <!--关闭按钮-->
+        <i class="button button-clear ion-close" ng-click="modal.remove()" style="position: absolute;top: 0;right: 0;z-index: 99;"></i>
+        <media-player ng-if="media" source="media" request-play="requestPlay" style="min-width: 100%;"></media-player>
+</ion-modal-view>

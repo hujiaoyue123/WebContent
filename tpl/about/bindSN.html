@@ -1,0 +1,42 @@
+<ion-view view-title="领取云空间奖励" ng-init="obj = {autoScan: true}">
+    <ion-nav-buttons side="left">
+        <button class="button button-clear" ng-click="$ionicGoBack()" style="color: #fff;font-size: 14px;">取消</button>
+    </ion-nav-buttons>
+    <ion-nav-title style="font-size: 15px;">领取云空间奖励</ion-nav-title>
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" style="color: #fff;font-size: 14px;" ng-click="obj.autoScan = !obj.autoScan">
+            <span ng-show="obj.autoScan">手工输入</span>
+            <span ng-show="!obj.autoScan">自动扫描</span>
+        </button>
+    </ion-nav-buttons>
+    <ion-content style="background: #edf4ff;">
+        <!--扫描-->
+        <div class="ios-input-offset" ng-show="obj.autoScan" style="padding: 20px 30px;text-align: center;max-width: 400px;margin: auto;">
+            <img src="img/about/scan-zx.png" style="max-width: 100%;width: 200px;"/>
+            <div style="color: #bbb9b9;padding: 12px 0;">
+                <p>扫一扫您的掌秀包装盒背面的条形码</p>
+                <p>如图所示位置，即可成功领取云空间奖励</p>
+            </div>
+            <div>
+                <button class="button button-positive button-block" style="border-radius: 40px;" ng-click="operate({type: 'scanToBind'})">扫一扫设备SN码</button>
+            </div>
+        </div>
+        <!--手动-->
+        <div class="ios-input-offset" ng-show="!obj.autoScan" style="padding: 20px 30px;text-align: center;max-width: 400px;margin: auto;">
+            <div>
+                <img src="img/about/input-zx-sn.png" style="max-width: 100%;width: 200px;"/>
+            </div>
+            <div style="color: #bbb9b9;padding: 12px 0;">
+                <p>请输入掌秀包装盒背面SN数值码</p>
+                <p>如图所示位置，即可成功领取云空间奖励</p>
+            </div>
+            <div style="position: relative;margin: 12px -30px;">
+                <img src="img/about/edit.png" style="position: absolute;top: 10px;left: 10px;width: 30px;display: inline;"/>
+                <input ng-model="bind.SN" type="text" placeholder="请输入掌秀SN码" style="width: 100%;font-size: 16px;padding: 8px 0 8px 45px;height: 45px;"/>
+            </div>
+            <div style="padding: 12px 0;">
+                <button class="button button-positive button-block" style="border-radius: 40px;" ng-click="operate({type: 'inputToBind'})" >确定</button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

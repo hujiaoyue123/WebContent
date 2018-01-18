@@ -1,0 +1,32 @@
+<!-- 盘右上角菜单 -->
+<ion-popover-view style="height: 44px;">
+	<ion-list>
+		<!--Android  -->
+		<ion-item ng-if="isAndroid" class="item item-icon-left mfblue" ngf-select="showAuditPopup($files)" ng-click="operate({type: 'clickTopMenuItem'})" style="color:#fff;cursor: pointer;">
+			<i class="icon ion-ios-cloud-upload-outline"></i>上传文件
+		</ion-item>
+		<!--IOS-->
+		<ion-item ng-if="isIos" class="item item-icon-left mfblue" ng-click="showIOSActionSheet()" style="color:#fff;cursor: pointer;">
+			<i class="icon ion-ios-cloud-upload-outline"></i>上传文件
+		</ion-item>
+		<ion-item ng-if="!isApp" class="item item-icon-left mfblue" ngf-select="showAuditPopup($files)" ng-click="operate({type: 'clickTopMenuItem'})" multiple="multiple" style="color:#fff;cursor: pointer;">
+			<i class="icon ion-ios-cloud-upload-outline"></i>上传文件
+		</ion-item>
+		<ion-item class="item-icon-left mfblue" style="color:#fff;" ng-click="operate({type: 'newFolder'})">
+			<i class="icon ion-ios-folder-outline"></i>新建文件夹
+		</ion-item>
+		<ion-item ng-if="showNewFile()" class="item-icon-left mfblue" style="color:#fff;" ng-click="operate({type: 'newFile'})">
+			<i class="icon ion-ios-list-outline"></i>新建文件
+		</ion-item>
+		<ion-item ng-if="isApp" class="item-icon-left mfblue" style="color:#fff;" ng-click="operate({type: 'camera'})">
+			<i class="icon ion-ios-camera-outline"></i>摄像头
+		</ion-item>
+		<ion-item ng-if="isApp" class="item item-icon-left mfblue" style="color:#fff;" ng-click="operate({type:'qrScan', $event:$event})">
+			<i class="icon ion-qr-scanner"></i>扫一扫
+		</ion-item>
+		<!-- 文件夹详情 -->
+		<ion-item class="item item-icon-left mfblue" style="color:#fff;" ng-click="operate({type: 'folderInfo',folder: currentFolder,$event: $event})">
+			<i class="icon ion-ios-information-outline"></i>详情
+		</ion-item>
+	</ion-list>
+</ion-popover-view>

@@ -1,0 +1,19 @@
+<!-- 显示一个html页面 -->
+<ion-view view-title="{{title}}" hide-back-button="true" cache-view="false">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button ng-click="$ionicGoBack()" class="button back-button buttons button-clear header-item">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<ion-nav-buttons side="right">
+		<label class="button button-clear button-light" ng-click="operate({action:'topMenu',event:$event})">
+			<i class="icon ion-android-menu" style="width:20px;"></i>
+		</label>
+	</ion-nav-buttons>
+	<ion-content scroll="{{isIos}}" overflow-scroll="true" style="overflow-y: hidden;">
+	<iframe ng-src='{{targetUrl}}' scrolling="yes" class="width-100 height-100" style="min-height: 100%; width:100%;height:100%;"></iframe>
+	</ion-content>
+</ion-view>

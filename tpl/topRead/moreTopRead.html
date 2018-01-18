@@ -1,0 +1,20 @@
+<!-- 更多文档浏览排名 -->
+<ion-view view-title="{{$stateParams.title}}">
+	<ion-content class="stable-bg">
+		<ion-refresher on-refresh="getRanking()"></ion-refresher>
+		<div class="list">
+			<div class="item item-icon-right item-avatar" ng-repeat="obj in data" style="padding-top: 8px;padding-bottom: 0;">
+				<img ng-src="{{obj.src}}" style="border-radius: 0;"/>
+				<h2 ng-bind="obj.filename" style="font-size: 14px;"></h2>
+				<p style="font-size: 12px;">
+					<span>上传人:</span>
+					<span ng-bind="obj.username" style="margin-left: 2px;"></span>
+				</p>
+				<p style="font-size: 12px;">排名：<span style="color: rgb(76,184,243);">{{$index+1}}</span></p>
+				<i class="icon" style="font-size: 12px;"><span>阅读量:</span><span ng-bind="obj.readcount"></span></i>
+			</div>
+		</div>
+		<!-- 分页刷新 -->
+		<ion-infinite-scroll ng-if="topReadPageConfig.hasMore" on-infinite="pagingForGetRanking()"></ion-infinite-scroll>
+	</ion-content>
+</ion-view>

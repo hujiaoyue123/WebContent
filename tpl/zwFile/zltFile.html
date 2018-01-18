@@ -1,0 +1,70 @@
+<!-- zlt文件编辑 -->
+<ion-view hide-nav-bar="true">
+	<div class="bar bar-header mfblue">
+		<!-- 回退按钮 -->
+		<button ng-click="$ionicGoBack()" class="button button-clear">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+		<div class="h1 title">
+			<input class="mfblue" ng-model="data.filename" ng-blur="updateResourceName()" style="font-size: 16px;border: 0;text-align: center;text-overflow: ellipsis;"/>
+		</div>
+		<div class="buttons right-buttons">
+			<button  class="button button-clear">
+				<ion-spinner ng-show="state.posting" class="spinner-light svg-20"></ion-spinner>
+			</button>
+			<button class="button button-clear" style="color: #fff;" ng-click="openPopover($event)">
+				<i class="icon ion-android-menu"></i>
+			</button>
+		</div>
+	</div>
+	<!-- 副标题 -->
+	<div class="bar bar-subheader" ng-if="data.cols.length>0" style="padding: 0;">
+		<ion-item class="item-divider  item-icon-right zltfile-item">
+			<div class="row">
+				<div class="col" ng-repeat="col in data.cols"  ng-if="col.display" ng-class="{'col-10': col.type == 'checkbox','col-15': col.type == 'date'}">
+					<!-- 全选 -->
+					<i ng-if="col.type == 'checkbox' && col.colname == ''" class="mf-blue-color" ng-class="{'ion-android-checkbox-outline-blank': !col.checked,'ion-android-checkbox-outline': col.checked}" style="font-size:24px;" ng-click="toggleCheckAll(col)"></i>
+					<!-- 内容 -->
+					<div ng-if="col.column != ''" style="font-size: 14px;line-height: 24px;">{{col.colname}}</div>
+				</div>
+			</div>
+			<i class="icon mf-blue-color" ng-click="toggleReorderButton()" style="font-size: 14px;cursor: pointer;">
+				<span ng-show="!showReorder">排序</span>
+				<button class="button button-balanced button-small" ng-show="showReorder">完成</button>
+			</i>
+		</ion-item>
+	</div>
+	<ion-content class="stable-bg" delegate-handle="zltScrollDelegate" ng-style="{'top': isIos ? (data.cols.length>0 ? '104px' : '64px') : (data.cols.length>0 ? '88px' : '44px')}">
+		<ion-refresher on-refresh="getData()"></ion-refresher>
+		<ion-list ng-if="data.content" show-reorder="showReorder" can-swipe="true">
+			<ion-item class="item-icon-right zltfile-item" ng-repeat="content in data.content"> 
+				<div class="row">
+					<div class="col" ng-repeat="col in data.cols" ng-if="col.display" ng-class="{'col-10': col.type == 'checkbox','col-15': col.type == 'date'}" style="word-wrap: break-word;overflow: hidden;">
+						<!-- cid匹配 -->
+						<div ng-repeat="(key,value) in content" ng-if="key == col.cid">
+							<!-- 复选框 -->
+							<i ng-if="col.type == 'checkbox'" class="mf-blue-color" ng-class="{'ion-android-checkbox-outline-blank': !content[key],'ion-android-checkbox-outline': content[key]}" style="font-size:24px;position: relative;top: 5px;" ng-click="toggleCheckbox(content,key)"></i>
+							<!-- text/textarea/number -->
+							<input ng-if="col.type != 'checkbox' && col.type !='date'" placeholder="未填写" type="{{col.type=='textarea'?'text':col.type}}" ng-model="content[key]" ng-blur="postData(content)"  style="font-size: 12px;width: 100%;text-overflow: ellipsis;"/>
+							<!-- date -->
+							<div ng-if="col.type == 'date'" ng-click="pickerDate(content,key)" style="font-size: 12px;height: 34px;line-height: 34px;">{{formatMonthAndDate(value)}}</div>
+						</div>
+					</div>
+				</div>
+			    <i class="icon ion-ios-information-outline mf-blue-color" ng-click="openFileDetail(content)" style="font-size: 32px;"></i>
+				<ion-option-button class="button-assertive" ng-click="removeContentRow(content)">删除</ion-option-button>
+				<ion-reorder-button class="ion-navicon"	on-reorder="reorderRow(content, $fromIndex, $toIndex)" style="color: #11c1f3;"></ion-reorder-button>
+    		</ion-item>
+		</ion-list>
+   		<!-- 添加 -->
+   		<ion-item ng-if="data.cols.length>0" class="item-divider calm" ng-click="addContentRow()" style="text-align: center;">
+   			<i class="icon ion-plus"></i>添加
+   		</ion-item>
+   		<!-- 空列 -->
+   		<div ng-if="data.cols.length == 0" style="text-align: center;padding-top: 20px;font-size: 16px;color: #ddd;">
+			<p>暂无内容</p>
+		</div>
+	</ion-content>
+</ion-view>

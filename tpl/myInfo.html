@@ -1,0 +1,80 @@
+<!-- 我的信息 -->
+<ion-view hide-back-button="true" view-title="我的资料">
+	<ion-nav-buttons side="left">
+		<button class="button button-clear buttons back-button header-item" ng-click="$ionicGoBack()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-list>
+			<!-- 头像-app -->
+			<ion-item ng-if="isApp" class="item-icon-right" ng-click="enterMyAvatar(user)" style="min-height:72px;">
+				<h2 style="line-height: 35px;">头像</h2>
+				<i class="icon">
+					<img style="width:50px;height:50px;border-radius:50%;" ng-src="{{user.photo}}" img-load-error="img/exception/user-error.png">
+				</i>
+			</ion-item>
+			<!-- 头像-pc-->
+			<ion-item ng-if="!isApp" class="item-icon-right" style="min-height:72px;cursor: pointer;">
+				<h2 ngf-select="USER.updateUserPhoto($files)" ngf-pattern="'image/*'"  style="line-height: 35px;">头像</h2>
+				<i class="icon" ng-click="showImage(user)"><img style="width:50px;height:50px;border-radius:50%;" ng-src="{{user.photo}}" img-load-error="img/exception/user-error.png"></i>
+			</ion-item>
+			<!--app-老版本
+			<ion-item ng-if="isApp" class="item-icon-right" style="min-height:72px;">
+				<h2 ng-click="operate({type: 'avatar'})" style="line-height: 35px;">头像</h2>
+				<i class="icon" ng-click="showImage(user)" ><img style="width:50px;height:50px;border-radius:50%;" ng-src="{{user.photo}}" img-load-error="img/exception/user-error.png"></i>
+			</ion-item>
+			  -->
+			<ion-item class="item-icon-right" ng-click="operate({type: 'updateUserName'})">
+				<h2>名称</h2>
+				<i class="icon" style="font-size:16px;color: gray;" ng-bind="user.username"></i>
+			</ion-item>
+			<ion-item class="item-icon-right" ng-click="operate({type: 'sex'})">
+				<h2>性别</h2>
+				<i class="icon" style="font-size:16px;color: gray;">
+					<span ng-if="user.sex == '1'">男</span>
+					<span ng-if="user.sex == '0'">女</span>
+				</i>
+			</ion-item>
+			<ion-item class="item-icon-right">
+				<h2>手机号</h2>
+				<i class="icon" style="font-size:16px;color: gray;" ng-bind="user.mobile"></i>
+			</ion-item>
+			<ion-item class="item-icon-right" style="padding-top: 8px;padding-bottom: 8px;cursor: pointer;">
+				<h2>签名</h2>
+				<p ng-if="user.sign" style="text-indent: 1em;font-size: 12px;white-space: normal;">{{user.sign}}</p>
+				<p ng-if="!user.sign" style="font-size: 12px;white-space: normal;">暂无签名</p>
+				<i class="icon ion-compose mf-blue-color" style="height: 54px; font-size: 25px;right: 11px;" ng-click="operate({type: 'sign'})"></i>
+			</ion-item>
+			<ion-item class="item-icon-right" style="padding-top: 8px;padding-bottom: 8px;cursor: pointer;">
+				<h2>邮箱</h2>
+				<p ng-if="user.email" style="text-indent: 1em;font-size: 12px;white-space: normal;">{{user.email}}</p>
+				<p ng-if="!user.email" style="font-size: 12px;white-space: normal;">未设置</p>
+				<i class="icon ion-compose mf-blue-color" style="height: 54px; font-size: 25px;right: 11px;" ng-click="operate({type: 'email'})"></i>
+			</ion-item>
+			<!-- 职务 -->
+			<ion-item ng-if="user.orguser" class="item-icon-right" style="padding-top: 8px;padding-bottom: 8px;cursor: pointer;">
+				<h2>职务</h2>
+				<p ng-if="user.jobs" style="text-indent: 1em;font-size: 12px;white-space: normal;">{{user.jobs}}</p>
+				<p ng-if="!user.jobs" style="font-size: 12px;white-space: normal;">未填写</p>
+				<i class="icon ion-compose mf-blue-color" style="height: 54px; font-size: 25px;right: 11px;" ng-click="operate({type: 'jobs'})"></i>
+			</ion-item>
+			<!-- 标签 -->
+			<ion-item class="item item-icon-right" ng-click="enterTagsPage()" style="padding-top: 8px;padding-bottom: 8px;">
+				<h2>标签</h2>
+				<p ng-if="user.tagDescription" ng-bind="user.tagDescription" style="white-space: normal;font-size: 12px;"></p>
+				<p ng-if="!user.tagDescription" style="font-size: 12px;">暂无标签</p>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<!-- 我的勋章 -->
+			<ion-item ng-if="user.medals.length>0" class="item item-icon-right" style="padding-top: 18px;padding-bottom: 18px;">
+				<h2>我的勋章</h2>
+				<i class="icon" ng-click="showMedalPopup()">
+					<img ng-repeat="medal in user.medals" ng-src="{{$root.CONFIG.server+medal.url}}" style="margin: 0 8px;width: 18px;"/>
+				</i>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

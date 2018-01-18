@@ -1,0 +1,21 @@
+<!-- 语音录制 -->
+<div style="width: 140px;">
+	<!-- 录音中 -->
+	<div ng-show="!cancelRecorde">
+		<!-- 图标 -->
+		<div class="ion-mic-a" style="position: relative;top: -10px;font-size: 80px; display: inline-block;"></div>
+		<!-- 音波幅度-->
+		<div style="display: inline-block;margin-left: 10px;width: 60px;height: 90px;background-image: url(img/media/analyser-{{amplitude ? amplitude : 1 }}.png);background-size: contain;background-repeat: no-repeat;"></div>
+		<!-- 提示消息 -->
+		<div style="color: #fff;margin-top: 5px; margin-bottom: -10px;font-size: 14px;">
+			<span ng-show="!warning">手指上滑,取消发送</span>
+			<span ng-show="warning">还可以说 <span ng-bind="endTime"></span> 秒</span>
+		</div>
+	</div>
+	<!-- 取消录音 -->
+	<div ng-show="cancelRecorde">
+		<!-- <div class="ion-arrow-return-left" style="transform: rotate(-90deg);font-size: 70px;"></div> -->
+		<div style="margin: auto;width: 120px;height: 90px;background-image: url(img/media/recorde-cancel.png);background-size: contain;background-repeat: no-repeat;"></div>
+		<div style="color: #fafafa;margin-top: 5px; margin-bottom: -10px;font-size: 14px;background-color: #c41616;border-radius: 3px;opacity: 0.9;padding: 5px;">松开手指,取消发送</div>
+	</div>
+</div>

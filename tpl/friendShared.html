@@ -1,0 +1,58 @@
+<!-- 分享给我的 -->
+<ion-view view-title="分享给我">
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-refresher on-refresh="getFriendShare()"></ion-refresher>
+		<!-- 空白 -->
+		<div ng-if="resources.length == 0" style="text-align: center;padding-top: 20px;font-size: 16px;color: #ddd;">暂无分享记录</div>
+		<ion-list class="pan-list">
+			<!-- mobile展示方式 -->
+			<div ng-if="!isHD">
+				<!-- 资源 -->
+				<ion-item class="item-avatar item-icon-right" ng-repeat="res in resources" ng-click="operate({type:'fileDetail',resource: res,$event: $event})">
+					<img style="border-radius: 0;" ng-src="{{res.src}}">
+					<h2 ng-bind="res.filename" style="line-height:20px;"></h2>
+					<p>
+						<span ng-bind="res.sharetime"></span>
+			        	<span style="margin-left:2px;font-size: 12px;color: gray;" ng-bind="res.filesize"></span>
+			        </p>
+			        <!-- 打开按钮 -->
+			        <i class="icon item-right-icon ion-ios-eye-outline icon-file-open" ng-click="operate({type: 'clickResource',resource: res,$event: $event})" style="font-size: 32px!important;">
+			        </i>
+	      			<ion-option-button class="button-calm" ng-click="operate({type:'share',resource: res,$event: $event})">分享</ion-option-button>
+					<ion-option-button class="button-assertive" ng-click="operate({type: 'deleteResource',resource: res,$event: $event})">删除</ion-option-button>
+				</ion-item>
+			</div>
+			<!-- HD展示方式 -->
+			<div ng-if="isHD">
+				<!-- 资源 -->
+				<ion-item class="item-avatar item-hd" ng-repeat="res in resources" ng-click="operate({type:'fileDetail',resource: res,$event: $event})" ng-style="{'height': res.showTool ? '112px' : '60px'}">
+					<img style="border-radius: 0;" ng-src="{{res.src}}">
+					<h2 ng-bind="res.filename" style="line-height:20px;"></h2>
+					<p>
+						<span ng-bind="res.sharetime"></span>
+			        	<span style="margin-left:2px;font-size: 12px;color: gray;" ng-bind="res.filesize"></span>
+			        </p>
+			        <!-- 打开按钮 -->
+			        <i class="item-right-icon ion-ios-eye-outline icon-file-open" ng-click="operate({type: 'clickResource',resource: res,$event: $event})" style="font-size: 32px!important;">
+			        </i>
+					<!-- 下拉按钮 -->
+					<i class="item-right-icon dropButton" ng-click="operate({type: 'toolMenu',resource: res,$event: $event})">
+						<i ng-if="!res.showTool" class="icon ion-ios-arrow-down"></i>
+						<i ng-if="res.showTool" class="icon ion-ios-arrow-up"></i>
+					</i>
+					<!-- 菜单栏 -->
+					<div ng-if="res.showTool" class="row hx-flex-justify-content" ng-click="operate({$event: $event})">
+						<a class="col" ng-click="operate({type:'share',resource: res,$event: $event})">
+							<i class="ion-share"></i>
+							<span>分享</span>
+						</a>
+						<a class="col red-color" ng-click="operate({type: 'deleteResource',resource: res,$event: $event})">
+							<i class="ion-ios-trash"></i>
+							<span>删除</span>
+						</a>				
+					</div>
+				</ion-item>
+			</div>
+		</ion-list>
+	</ion-content>
+</ion-view>

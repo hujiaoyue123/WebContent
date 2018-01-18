@@ -1,0 +1,23 @@
+<!-- 联系人-右上角菜单 -->
+<ion-popover-view style="height:20px;">
+	<ion-list>
+		<ion-item ng-if="showAddUserMenu()" class="item item-icon-left mfblue" style="color:#fff;" ng-click="menuClick({action:'addUserToDept'})">
+			<i class="icon ion-person-add"></i>添加成员
+		</ion-item>
+		<ion-item ng-if="showCreateDeptMenu()" class="item-icon-left mfblue" style="color:#fff;" ng-click="menuClick({action:'newDept'})">
+			<i class="icon ion-ios-people"></i>创建部门
+		</ion-item>
+		<!-- 
+		<ion-item ng-if="$stateParams.type == 0 && $stateParams.id==0" class="item-icon-left mfblue" style="color:#fff;" ng-click="menuClick({action:'newGroup'})">
+			<i class="icon ion-android-contacts"></i>创建群组
+		</ion-item>
+		 -->
+		<ion-item ng-if="showQuitMenu()" class="item-icon-left mfblue" ng-click="menuClick({action:'quitGroup'})">
+			<i class="icon ion-android-exit"></i>退出
+		</ion-item>
+		<ion-item ng-if="params.id != 0" class="item-icon-left mfblue" style="color:#fff;" ng-click="menuClick({action:'groupDetail'})">
+			<i class="icon ion-information-circled"></i>详情
+		</ion-item>
+		<!--  -->
+	</ion-list>
+</ion-popover-view>

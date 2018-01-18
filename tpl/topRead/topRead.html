@@ -1,0 +1,43 @@
+<!-- 文档浏览排名 -->
+<ion-view view-title="文档浏览排名">
+	<ion-content class="stable-bg">
+		<ion-refresher on-refresh="onrefresh()"></ion-refresher>
+		<div class="list">
+			<!-- 本周排名 -->
+			<div class="item item-divider" style="text-align: center;font-size: 14px;">
+				本周排名
+				<button ng-if="weeks.length > 0" class="button button-clear" ng-click="moreRanking('week')" style="position: absolute;right: 5px;min-height: 20px;line-height: 20px;font-size: 14px;">更多</button>
+			</div>
+			<div class="item item-icon-right topRead-list-item" ng-repeat="obj in weeks">
+				<div class="ranking" ng-style="getRankingImage($index)"></div>
+				<img ng-src="{{obj.src}}" style="border-radius: 0;"/>
+				<h2 ng-bind="obj.filename" style="font-size: 14px;"></h2>
+				<p style="font-size: 12px;">
+					<span>上传人:</span>
+					<span ng-bind="obj.username" style="margin-left: 2px;"></span>
+				</p>
+				<i class="icon" style="font-size: 12px;"><span>阅读量:</span><span ng-bind="obj.readcount"></span></i>
+			</div>
+			<!-- 本周没有排名数据 -->
+			<div ng-if="!weeks || weeks.length == 0" style="text-align: center;margin: 30px 0;font-size: 16px;color: #ddd;">暂无排名</div>
+			
+			<!-- 累计排名 -->
+			<div class="item item-divider" style="text-align: center;font-size: 14px;">
+				累计排名
+				<button ng-if="all.length>0" class="button button-clear" ng-click="moreRanking('all')" style="position: absolute;right: 5px;min-height: 20px;line-height: 20px;font-size: 14px;">更多</button>
+			</div>
+			<div class="item item-icon-right topRead-list-item" ng-repeat="obj in all">
+				<div class="ranking" ng-style="getRankingImage($index)"></div>
+				<img ng-src="{{obj.src}}" style="border-radius: 0;"/>
+				<h2 ng-bind="obj.filename" style="font-size: 14px;"></h2>
+				<p style="font-size: 12px;">
+					<span>上传人:</span>
+					<span ng-bind="obj.username" style="margin-left: 2px;"></span>
+				</p>
+				<i class="icon"  style="font-size: 12px;"><span>阅读量:</span><span ng-bind="obj.readcount"></span></i>
+			</div>
+			<!-- 没有累计排名数据 -->
+			<div ng-if="!all || all.length == 0" style="text-align: center;margin: 30px 0;font-size: 16px;color: #ddd;">暂无排名</div>
+		</div>
+	</ion-content>
+</ion-view>

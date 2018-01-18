@@ -1,0 +1,132 @@
+<!-- mobile登陆页 -->
+<ion-view hide-nav-bar="true">
+	<div class="login-root login-bg-image">
+		<div class="login-form" style="height: 100%;">
+			<div style="width:300px;margin: auto;overflow:hidden;" ng-if="operate!='policy' && operate!='privacy'">
+				<!-- 验证码登录 -->
+				<div ng-if="operate == 'valid'"  style="padding: 0 10px;">
+					<img style="width:75px;margin-bottom: 14px;" src="img/login/logo-240.png">
+					<form ng-submit="USER.verifyLogin()">
+						<div class="list"  style="margin-bottom:5px;">
+							<div class="item item-input" style="border-radius:6px;">
+								<i class="icon ion-ios-person-outline" style="font-size:32px;padding:0 20px 0 2px;color:#A2A2A2;"></i>
+								<input type="text" placeholder="请输入手机号码" ng-model="user.loginname" style="font-size:16px">
+							</div>
+							<div class="item item-input-inset" style="border-radius:6px;margin-top:7px;">
+								<label class="item-input-wrapper" style="background:#fff;">
+									<input type="text" ng-model="verify.validation" placeholder="输入验证码" maxlength="6" style="width:140px;font-size:15px;font-weight:500;">
+								</label>
+								<button type="button" class="button button-calm button-small" ng-click="USER.getVerifyCode('verify')" ng-disabled="!verify.enable">
+									获取验证码<span ng-if="!verify.enable">({{verify.time}})</span>
+								</button>
+							</div>
+						</div>
+						<button type="submit" class="button button-block" style="background-color: rgb(32,88,119);border: 0;border-radius: 8px;color: #fff;margin-top:0;">登　录</button>
+					</form>
+					<a style="float:left;color:#fff;font-size:16px;border:0;" class="button button-outline button-small" ng-click="goTab('login')">密码登录</a>
+					<a style="float:right;color:#fff;font-size:16px;border:0;" class="button button-outline button-small" ng-click="goTab('register')">新用户注册</a>
+				</div>
+				<!-- 登录 -->
+				<div ng-if="operate == 'login'"  style="padding: 0 10px;">
+					<img style="width:75px;margin-bottom: 14px;" src="img/login/logo-240.png">
+					<form>
+						<div class="list">
+							<div class="item item-input" style="border-radius:6px;">
+								<i class="icon ion-ios-person-outline" style="font-size:32px;padding:0 20px 0 2px;color:#A2A2A2;"></i>
+								<input type="text" placeholder="请输入手机号码" ng-model="user.loginname" style="font-size:16px;" autofocus>
+							</div>
+							<div class="item item-input" style="border-radius:6px;margin-top:7px;">
+								<i class="icon ion-ios-unlocked-outline" style="font-size:32px;padding:0 20px 0 2px;color:#A2A2A2;"></i>
+								<input type="password" placeholder="输入密码" ng-model="user.password" style="font-size:16px;">
+							</div>
+						</div>
+						<button ng-click="USER.login()" class="button button-block" style="background-color: rgb(32,88,119);border: 0;border-radius: 8px;color: #fff;">登　录</button>
+					</form>
+					<a style="float:left;color:#fff;font-size:16px;border:0;" class="button button-outline button-small" ng-click="goTab('valid')">验证码登录</a>
+					<a style="float:right;color:#fff;font-size:16px;border:0;" class="button button-outline button-small" ng-click="goTab('register')">新用户注册</a>
+				</div>
+				<!-- 注册 -->
+				<div ng-if="operate == 'register'" style="padding: 0 10px;">
+					<form name="registerForm" ng-submit="USER.register()" novalidate>
+						<div class="list" style="top:13px;">
+							<div class="item item-input" style="border-radius:6px;">
+								<i class="icon ion-iphone" style="font-size:32px;padding:0 24px 0 6px;color:#A2A2A2;"></i>
+								<input name="mobileInput" type="text" placeholder="请输入手机号码" ng-model="user.loginname" ng-focus="rfocus=true" ng-blur="rfocus=false" required style="font-size:16px" ui-validate="'verifyMobile($value)'">
+								<i class="icon ion-checkmark-circled" style="color:green;" ng-show="registerForm.mobileInput.$valid && (rfocus===false)"></i>
+								<i class="icon ion-close-circled" style="color:red;" ng-show="registerForm.mobileInput.$error.validator && (rfocus===false)"></i>
+							</div>
+							<div class="item item-input-inset" style="border-radius:6px;margin-top:7px;margin-bottom:7px;padding:5px;">
+								<label class="item-input-wrapper" style="background:#fff;">
+								<i class="icon ion-ios-chatbubble-outline" style="font-size:32px;padding:0 14px 0 2px;color:#A2A2A2;"></i>
+									<input type="text" ng-model="register.validation" placeholder="输入验证码" maxlength="6" required style="width:140px;font-size:16px;font-weight:500;">
+								</label>
+								<button type="button" class="button button-calm button-small" style="min-height:20px;line-height:19px;" ng-click="USER.getVerifyCode('register')" ng-disabled="!register.enable">
+									获取验证码<span ng-if="!register.enable">({{register.time}})</span>
+								</button>
+							</div>
+							<div class="item item-input" style="border-radius:6px;">
+								<i class="icon ion-ios-person-outline" style="font-size:32px;padding:0 20px 0 2px;color:#A2A2A2;"></i>
+								<input name="usernameInput" type="text" placeholder="请输入姓名" maxlength="20" ng-model="register.nickname" required ng-focus="focus=true" ng-blur="focus=false" style="font-size:16px;">
+							</div>
+							<div class="item item-input" style="border-radius:6px;margin-top:7px;">
+								<i class="icon ion-ios-unlocked-outline" style="font-size:32px;padding:0 20px 0 2px;color:#A2A2A2;"></i>
+								<input type="password" placeholder="输入密码" minlength="6" ng-model="register.password" required style="font-size:16px;">
+							</div>
+							<div class="item item-input" style="border-radius:6px;margin-top:7px;">
+								<i class="icon ion-ios-unlocked-outline" style="font-size:32px;padding:0 20px 0 2px;color:#A2A2A2;"></i>
+								<input type="password" placeholder="确认密码" minlength="6" ng-model="register.rePassword" required style="font-size:16px;">
+							</div>
+						</div>
+						<button type="submit" ng-disabled="regButton" class="button button-block" style="background-color: rgb(32,88,119);border: 0;border-radius: 8px;color: #fff;margin-top:0;">注　册</button>
+					</form>
+					<div>
+					<a style="float:left;color:#fff;font-size:16px;border:0;" class="button button-outline button-small" ng-click="goTab('valid')">验证码登录</a>
+					<a style="float:right;color:#fff;font-size:16px;border:0;" class="button button-outline button-small" ng-click="goTab('login')">密码登录</a>
+					</div>
+					<div style="clear:both;width:100%; margin-top:70px;">
+					<span>点击注册按钮即表示您同意</span><br>
+					<span ng-click="goTab('policy')" style="color:blue;">《服务协议》</span><span ng-click="goTab('privacy')" style="color:blue;">《隐私政策》</span>
+					</div>
+				</div>
+			</div>
+				<!--  服务协议  -->
+				<div ng-if="operate == 'policy'" style="padding: 0 10px;">
+					<ion-header-bar class="mfblue">
+						<button class="button back-button buttons button-clear header-item" style="position:fixed;"  ng-click="goTab('register')">
+							<i class="icon ion-ios-arrow-back">
+								<span class="back-text">返回</span>
+							</i>
+						</button>
+					</ion-header-bar>
+					<ion-content  scroll="true" ng-style="isApp?{bottom:'10px'}:{bottom:'110px'}">
+						<div ng-bind-html="policy" style="text-align: left;background-color: white;color: black;line-height: 18px;padding: 15px;"></div>
+					</ion-content>
+				</div>
+				<!-- 隐私政策 -->
+				<div ng-if="operate == 'privacy'" style="padding: 0 10px;">
+					<ion-header-bar class="mfblue">
+						<button class="button back-button buttons button-clear header-item" style="position:fixed;"  ng-click="goTab('register')">
+							<i class="icon ion-ios-arrow-back">
+								<span class="back-text">返回</span>
+							</i>
+						</button>
+					</ion-header-bar>
+					<ion-content  scroll="true" ng-style="isApp?{bottom:'10px'}:{bottom:'110px'}">
+						<div ng-bind-html="privacy" style="text-align: left;background-color: white;color: black;line-height: 18px;padding: 15px;"></div>
+					</ion-content>
+				</div>
+		</div>
+	</div>
+	<!-- 掌秀设置 
+	<div ng-if="isApp" style="position: absolute;right: 10px;color: #fff;" ng-style="{'top': isIos ? '20px' : '10px'}">
+		<span ui-sref="zsetting">掌秀设置</span>
+		<i class="ion-ios-arrow-forward"></i>
+	</div>-->
+	<!-- 下载App -->
+	<div ng-if="!isApp" class="downApp">
+		<div>
+			<img ng-click="download()" src="img/login/logo-240.png"/>
+		</div>
+		<p>下载App</p>
+	</div>
+</ion-view>

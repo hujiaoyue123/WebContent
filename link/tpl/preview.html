@@ -1,0 +1,47 @@
+<!-- 预览-->
+<ion-view id="preview" hide-nav-bar="true" cache-view="false" full-screen="fullScreen">
+	<!-- 顶部 -->
+	<div class="bar bar-header preview-bar" toggle-menu="showMenu" position="top" style="background-color: rgba(31, 29, 29,0.5);border-bottom:0;">
+		<button class="button button-clear icon ion-ios-arrow-back" ng-click="$ionicGoBack()"></button>
+		<h2 class="title" style="position:absolute;left:60px;right:60px;" ng-bind="$stateParams.name || headerTitle"></h2>
+		<button class="button button-clear">
+			<span>{{showIndex+1}}/{{actualList.length}}</span>
+		</button>
+	</div>
+	<!-- ImgBox -->
+	<ion-slide-box  does-continue="true" on-slide-changed="slideHasChanged($index)" delegate-handle="preview" show-pager="false" style="background:none;background-color:#3B3D40;height:100%;" ng-click="showMenu = !showMenu">
+	  <ion-slide ng-repeat="img in showList track by $index" repeat-done="repeatDone()">
+	     	<ion-spinner ng-if="!img.loading" icon="ios" style="position: absolute;top: 50%;left: 50%;stroke: #fff;z-index: 100;"></ion-spinner>
+	     	<ion-scroll direction="{{direction}}" zooming="true" min-zoom="{{zoomMin}}" delegate-handle="scrollHandle{{$index}}" on-scroll="updateSlideStatus($index,img)" has-bouncing="true" style="width:100%;height:100%;overflow-x: hidden;overflow-y: hidden;">
+	     		<img ng-src="{{img.src}}" on-double-tap="operate('resize')" img-load="imgLoad" file="img" ng-style="{width: img.currentWidth+'px',height: img.currentHeight+'px','margin-top': img.marginTop+'px','margin-left': img.marginLeft+'px','transform': img.rotate? 'rotate('+img.rotate+'deg)' : 'rotate(0deg)'}"></img>
+	     	</ion-scroll>
+	  </ion-slide>
+	</ion-slide-box>
+	<!-- 底部菜单-->
+	<ion-footer-bar class="preview-footer" toggle-menu="showMenu" position="bottom">
+		<!-- 缩小 -->
+		<div class="flex-auto">
+			<button ng-click="operate('zoomin')">
+				<i class="icon icon ion-minus-circled"></i>
+			</button>
+		</div>
+		<!-- 放大 -->
+		<div class="flex-auto">
+		 	<button ng-click="operate('zoomout')">
+				<i class="icon ion-plus-circled"></i>
+			</button>
+		</div>
+	    <!-- mobile旋转 -->
+	    <div class="flex-auto">
+			<button ng-click="operate('rotate')">
+				<i class="icon ion-loop"></i>
+			</button>
+	    </div>
+		<!-- 全屏 -->
+		<div class="flex-auto">
+			<button ng-click="operate('fullscreen')">
+				<i class="icon ion-arrow-expand"></i>
+			</button>
+		</div>
+	</ion-footer-bar>
+</ion-view>

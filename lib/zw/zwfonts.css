@@ -1,0 +1,40 @@
+@font-face {
+  font-family: 'zwicon';
+  src:
+    url('fonts/zwicon.ttf?6mx7z2') format('truetype'),
+    url('fonts/zwicon.woff?6mx7z2') format('woff'),
+    url('fonts/zwicon.svg?6mx7z2#zwicon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.zwicon{
+  font-family: 'zwicon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-qrcode:before {
+  content: "\e600";
+}
+.icon-company:before {
+  content: "\e601";
+}
+.icon-scanning:before {
+  content: "\e604";
+}
+.icon-emotion-1:before {
+  content: "\e607";
+}
+.icon-sort:before {
+  content: "\e900";
+}
+

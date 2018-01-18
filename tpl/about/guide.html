@@ -1,0 +1,27 @@
+<!--服务常驻内存指导 -->
+<ion-view hide-back-button="true" view-title="{{title}}">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button ng-click="$ionicGoBack()" class="button back-button buttons button-clear header-item">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" has-bouncing="true" scroll="false">
+		<div style="width: 100%;text-align: center; margin:auto; height:100% ;">
+			<div style="height:90%;" ><img class="guideCs" src="{{dataimg}}" /></div>
+			<div style="margin-top:20px;margin-left:20px;text-align: left;vertical-align: middle;height:10%;"><span>{{datadesc}}</span></div>
+		</div>
+	</ion-content>
+	<ion-footer-bar>
+		<div style="width: 100%;text-align: center;">
+			<button ng-disabled="slideIndex==0" class="button button-positive" style="margin-top:0; width:150px;margin:auto;" ng-click="slidePrevious()">
+				上一页
+			</button>
+			<button ng-disabled="slideIndex==length-1" class="button button-positive" style="margin-top:0; width:150px;margin:auto;" ng-click="slideNext()">
+				下一页
+			</button>
+		</div>
+	</ion-footer-bar>
+</ion-view>

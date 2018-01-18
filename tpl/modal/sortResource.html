@@ -1,0 +1,26 @@
+<ion-modal-view style="background: rgba(0, 0, 0, 0.3);top: 0;right: 0;bottom: 0;left: 0;width: 100%;" ng-click="modal.remove()">
+    <div class="popup-container popup-showing active">
+        <div class="popup" ng-click="$event.stopPropagation()">
+            <div class="popup-head">
+                <h5 class="popup-sub-title">选择一种排序方式</h5>
+            </div>
+            <div class="popup-body">
+                <!--资源排序-->
+                <button class="button button-block" ng-click="setSort('name')"
+                        ng-style="{color: $root.localConfig.sortResource == 'name' ? 'rgb(76,184,243)' : '#444'}"
+                        style="color: rgb(68, 68, 68);">
+                    按名称排序
+                    <i ng-show="$root.localConfig.sortResource == 'name'" class="ion-android-done ng-hide"
+                       style="position: absolute; top: 5px; right: 8px; color: rgb(76, 184, 243); font-size: 22px;"></i>
+                </button>
+                <button class="button button-block" ng-click="setSort('date')"
+                        ng-style="{color: $root.localConfig.sortResource == 'date' ? 'rgb(76,184,243)' : '#444'}"
+                        style="color: rgb(76, 184, 243);">
+                    按时间排序
+                    <i ng-show="$root.localConfig.sortResource == 'date'" class="ion-android-done"
+                       style="position: absolute;top: 5px;right: 8px;color: rgb(76,184,243);font-size: 22px;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</ion-modal-view>

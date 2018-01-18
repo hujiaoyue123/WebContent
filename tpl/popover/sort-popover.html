@@ -1,0 +1,14 @@
+<ion-popover-view style="width: 100px;height: 0px;">
+    <div class="list" style="text-align: center;margin-bottom: 0;">
+        <!--时间排序-->
+        <div class="item mfblue" ng-click="setSort('date')" style="font-size: 12px;padding: 5px 0px;cursor: pointer;border-top-left-radius: 3px;border-top-right-radius: 3px;letter-spacing: 1px;">
+            <span>时间排序</span>
+            <i ng-show="$root.localConfig.sortResource == 'date'" class="ion-android-done" style="position: absolute;top: 5px;right: 8px;"></i>
+        </div>
+        <!--名称排序-->
+        <div class="item mfblue" ng-click="setSort('name')" style="font-size: 12px;padding: 5px 0px;cursor: pointer;border-bottom-left-radius: 3px;border-bottom-right-radius: 3px;letter-spacing: 1px;">
+            <span>名称排序</span>
+            <i ng-show="$root.localConfig.sortResource == 'name'" class="ion-android-done" style="position: absolute;top: 5px;right: 8px;"></i>
+        </div>
+    </div>
+</ion-popover-view>

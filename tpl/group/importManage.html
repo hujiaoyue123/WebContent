@@ -1,0 +1,40 @@
+<!-- 企业批量导入 -->
+<ion-view view-title="企业批量导入" hide-back-button="true">
+	<ion-nav-buttons side="left">
+		<button class="button back-button buttons button-clear header-item" ng-click="$ionicGoBack()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-list>
+			<ion-item class="item item-avatar">
+				<img ng-src="{{$root.CONFIG.defaultOrgPhoto}}">
+				<h2 ng-bind="org.name"></h2>
+				<p>批量导入说明</p>
+			</ion-item>
+			<ion-item class="item item-body" style="padding: 10px">
+				<span>导入三步：</span>
+				<p>步骤一：下载导入模板，如下图；<span style="color: red;">（员工的手机号码和姓名必须填写,其他项可根据现有信息输入）</span>。</p>
+				<p>步骤二：根据第一行提示输入信息，上传填好的文件。</p>
+				<p>步骤三：等待返回结果，根据结果调整文件内容，重复上述步骤二。</p>
+				<img class="full-image" style="max-height: 84px; max-width: 407px;" src="img/import.png">
+				<h2 style="text-align: center;margin-top: 0px;font-size: 14px;">(模板示图)</h2>
+			</ion-item>
+			<ion-item ng-if="messages" class="item item-body">
+				<div ng-repeat="message in messages" style="font-size: 14px;color: red;width: 100%;height: 16px;text-align: center;">{{message}}</div>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+	<ion-footer-bar class="mfblue hx-flex-justify-content" style="padding:0;padding-top: 2px;">
+		<a class="tab-item" style="opacity: 1;" ng-click="download()">
+			<i class="icon ion-ios-cloud-download-outline" style="height: 20px;font-size: 20px;"></i>
+			<span class="tab-title" style="font-size: 12px;">下载模板</span>
+		</a>
+		<a class="tab-item" style="opacity: 1;" ngf-select="upload($files)" ngf-pattern="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'" ngf-accept="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'">
+			<i class="icon ion-ios-cloud-upload-outline" style="height: 20px;font-size: 20px;"></i>
+			<span class="tab-title" style="font-size: 12px;">上传文件</span>
+		</a>
+	</ion-footer-bar>
+</ion-view>

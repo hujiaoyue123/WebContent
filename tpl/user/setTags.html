@@ -1,0 +1,12 @@
+<!-- 添加标签 -->
+<ion-view view-title="添加标签">
+	<ion-nav-buttons side="right">
+		<button class="button button-clear" ng-click="saveTags()" style="color: #fff;font-size: 14px;">保存</button>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" ng-click="addTags()" style="padding-top: 8px;">
+		<span ng-repeat="tag in tags" ng-click="readyDelete(tag,$event)" style="display: inline-block;border: 1px solid #33cd5f;border-radius: 17px;padding: 1px 12px; margin: 3px; text-align: center;cursor: pointer;" ng-style="getState(tag)">
+			<span ng-bind="tag.tag"></span><span ng-if="tag.readyDelete" style="margin-left: 2px;">✖</span>
+		</span>
+		<input ng-click="stopPropagation($event)" pu-elastic-input placeholder="添加标签" ng-model="newTag.tag" style="min-width: 70px;border: 1px dashed #aaaaaa;border-radius: 17px;padding: 1px 12px; margin: 3px;"/>
+	</ion-content>
+</ion-view>

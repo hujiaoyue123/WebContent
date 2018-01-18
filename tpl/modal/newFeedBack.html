@@ -1,0 +1,16 @@
+<!-- 新建反馈 -->
+<ion-modal-view>
+	<ion-header-bar class="mfblue">
+		<button class="button back-button buttons button-clear header-item">
+			<i class="icon ion-ios-arrow-back"></i>
+		</button>
+		<h2 class="title">添加反馈</h2>
+	</ion-header-bar>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-list>
+			<label class="item-input-wrapper">
+                 <textarea ng-model="input.message" required="" minlength="1" maxlength="1500" msd-elastic="" class="ng-valid-minlength ng-valid-maxlength ng-dirty ng-touched ng-invalid ng-invalid-required" style="overflow: hidden; word-wrap: break-word; resize: none; height: 150px;"></textarea>
+             </label>
+		</ion-list>
+	</ion-content>
+</ion-modal-view>

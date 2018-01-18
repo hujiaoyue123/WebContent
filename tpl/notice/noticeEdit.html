@@ -1,0 +1,42 @@
+<!-- 编辑公告 -->
+<ion-view view-title="编辑公告">
+	<ion-nav-buttons side="right">
+		<button class="button button-clear" style="color: #fff;font-size: 14px;" ng-click="publish(notice.type)">保存</button>
+		<button ng-if="notice.type != 'publish' && notice.type" class="button button-clear" style="color: #fff;font-size: 14px;" ng-click="publish('publish')">发布</button>
+		<button ng-if="notice.type == 'publish'" class="button button-clear" style="color: #fff;font-size: 14px;" ng-click="publish('cancel')">取消发布</button>
+	</ion-nav-buttons>
+
+	<ion-content class="stable-bg">
+		<ion-list>
+			<ion-item class="item item-divider" style="padding: 0;min-height: 12px;"></ion-item>
+			<ion-item class="item item-input">
+			  <input type="text" placeholder="标题 (必填),最多100字" maxlength="100" ng-model="notice.title">
+			</ion-item>
+			
+			<ion-item class="item item-divider" style="padding: 0;min-height: 12px;"></ion-item>
+			<ion-item class="item">
+				<textarea placeholder="内容 (必填)" ng-model="notice.content" style="resize: none;width: 100%;min-height: 100px;"></textarea>
+			</ion-item>
+			
+			<div class="item item-divider" style="padding: 0;min-height: 12px;"></div>
+			<!-- 添加文件 -->
+			<ion-item class="item item-icon-right" style="padding-top: 12px;padding-bottom: 12px;">
+				<h2 style="color: #b2b2b2;">添加文件</h2>
+				<i class="icon ion-ios-plus-outline" ng-click="selectFile()" style="color: #b2b2b2;"></i>
+			</ion-item>
+			<!-- 文件列表 -->
+			<div class="pan-list">
+				<ion-item class="item-avatar item-icon-right" ng-repeat="file in notice.files">
+					<img style="border-radius: 0;" ng-src="{{file.src}}">
+					<h2 ng-bind="file.filename" style="line-height:20px;"></h2>
+					<p>
+						<span ng-bind="file.createtime"></span>
+			        	<span style="margin-left:2px;font-size: 12px;color: gray;" ng-bind="file.filesize"></span>
+			        </p>
+			        </i>
+					<ion-option-button class="button-assertive" ng-click="removeFile(file)">删除</ion-option-button>
+				</ion-item>
+			</div>
+		</ion-list>
+	</ion-content>
+</ion-view>

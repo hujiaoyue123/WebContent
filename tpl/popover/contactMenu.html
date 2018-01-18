@@ -1,0 +1,17 @@
+<!-- 联系人-右上角菜单 -->
+<ion-popover-view style="height:44px;">
+	<ion-list>
+		<ion-item class="item-icon-left mfblue" style="color:#fff;" ng-click="menuClick({action:'newFriend', event:$event})">
+			<i class="icon ion-person-add"></i>添加好友
+		</ion-item>
+		<ion-item class="item-icon-left mfblue" style="color:#fff;" ng-click="menuClick({action:'newGroup', event:$event})">
+			<i class="icon ion-android-contacts"></i>创建群组
+		</ion-item>
+		<ion-item class="item-icon-left mfblue" style="color:#fff;" ng-click="menuClick({action:'newOrg', event:$event})">
+			<i class="icon zwicon icon-company"></i>创建 / 加入企业
+		</ion-item>
+		<ion-item ng-if="isMobile" class="item item-icon-left mfblue" style="color:#fff;" ng-click="menuClick({action:'qrScan', event:$event})">
+			<i class="icon ion-qr-scanner"></i>扫一扫
+		</ion-item>
+	</ion-list>
+</ion-popover-view>

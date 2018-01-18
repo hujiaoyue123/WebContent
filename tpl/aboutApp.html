@@ -1,0 +1,53 @@
+<!-- 关于掌文 -->
+<ion-view hide-back-button="true" view-title="关于掌文">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button class="button button-clear buttons back-button header-item" ng-click="$ionicGoBack()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<!-- 分享 
+	<ion-nav-buttons side="right">
+		<button class="button button-clear buttons back-button header-item" ng-click="shareApp()">
+			<i class="icon ion-share"></i>
+		</button>
+	</ion-nav-buttons>-->
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-item class="item-divider" style="padding: 0px; min-height: 15px;border-top: 0;"></ion-item>
+		<!-- 掌文介绍 -->
+		<ion-item class="item item-thumbnail-left item-icon-right" href="#">
+	     	<img src="img/logo-p.png">
+	     	<h2 style="margin-top: 20px;color: #9A8F8F;">掌文 <span ng-if="isApp">{{version}}</span></h2>
+	     	<!-- app带copy -->
+	     	<p ng-if="isApp" ng-click="copyLink('web.zhangwin.com')" style="line-height: 32px;color: #387ef5;cursor: pointer;">web.zhangwin.com</p>
+	     	<!-- pc跳转链接 -->
+	     	<p ng-if="!isApp"><a ng-href="{{$root.CONFIG.address}}" target="_blank" style="text-decoration: none;line-height: 32px;">web.zhangwin.com</a></p>
+	     	<i class="icon zwicon icon-qrcode" ng-click="openQrcode()" style="color: #b2b2b2;right: 18px;"></i>
+	   	</ion-item>
+	   	<ion-item class="item-divider" style="padding: 0px; min-height: 15px;"></ion-item>
+		<!-- 功能菜单 -->
+		<ion-list>
+			<!-- <ion-item class="item-icon-right">
+				<h2>帮助与反馈</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item> -->
+			<!-- 功能介绍 -->
+			<ion-item class="item-icon-right" ng-click="operate({action: 'checkFeatures'})">
+				<h2>功能介绍</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<ion-item ng-if="isAndroid" class="item-icon-right" ng-click="operate({action: 'checkVersion'})">
+				<h2>版本更新</h2>
+				<span ng-if="updateVersion > 0" class="badge badge-assertive" ng-bind="upVersion"></span>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+		</ion-list>
+		<!-- 公司信息 -->
+		<div style="text-align:center;color:#5B5D26;padding:32px 16px;">
+			<p>微掌文公司 版权所有</p>
+			<p>Copyright ©2016 微掌文科技(北京)有限公司</p>
+		</div>
+	</ion-content>
+</ion-view>

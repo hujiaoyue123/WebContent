@@ -1,0 +1,25 @@
+<!-- 搜索 -->
+<ion-view hide-nav-bar="true" view-title="搜索">
+	<ion-header-bar class="item-input-inset mfblue" >
+		<button class="button back-button buttons button-clear header-item" ng-click="$ionicGoBack()" style="color: #fff;padding-right: 5px;">
+	    	<i class="icon ion-ios-arrow-back"></i>
+	  	</button>
+	  <ion-search autofocus class="search-headerbar" placeholder="搜索：用户名，手机号，邮箱，标签，职务" filter="search.text" source="SEARCH.searchUser(str)" model="search.users"></ion-search>
+	</ion-header-bar>
+	<ion-content class="stable-bg" has-bouncing="true" delegate-handle="searchContactScrollDelegate">
+		<ion-list>
+			<ion-item ng-repeat="user in search.users" class="item item-icon-left item-icon-right item-user"
+					 ng-click="operate({action: 'clickuser',user: user},$event)" style="padding-top: 8px;padding-bottom: 8px;min-height: 62px;">
+				<i class="icon"><img ng-src="{{user.avatar}}"></i>
+				<h2 style="line-height:20px;">{{user.username}}<span  style="margin-left: 5px;font-size: 12px;" ng-bind="user.mobile"></span></h2>
+				<p ng-repeat="path in user.paths track by $index" ng-if="$index ==0" style="font-size: 12px;">{{removeSprit(path)}}</p>
+				<i class="icon ion-ios-arrow-right icon-accessory" style="right: 3px;color:#ccc;font-size:16px;"></i>
+			</ion-item>
+		</ion-list>
+		<!-- 无结果 -->
+		<div ng-if="search.users.length == 0" style="text-align: center;margin-top: 60px;">
+			<h4 class="no-result-color">暂无搜索结果</h4>
+		</div>
+		<ion-infinite-scroll ng-if="pageConfig.search.hasMore" on-infinite="SEARCH.pagingForSearchUser()"></ion-infinite-scroll>
+	</ion-content>
+</ion-view>

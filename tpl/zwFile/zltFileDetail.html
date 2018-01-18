@@ -1,0 +1,40 @@
+<!-- zlt文件详情  -->
+<ion-view view-title="详情">
+	<ion-nav-buttons side="right">
+		<button class="button button-clear">
+			<ion-spinner ng-show="posting" class="spinner-light svg-20"></ion-spinner>
+		</button>
+	</ion-nav-buttons>
+	<ion-content>
+		<ion-list>
+			<!-- 内容 -->
+			<div ng-repeat="column in columns" ng-if="column.colname">
+				<!-- 列名 -->
+				<ion-item class="item-divider">{{column.colname}}</ion-item>
+				<!-- 复选框 -->
+				<ion-item ng-if="column.type == 'checkbox'" ng-click="toggleCheckbox(content,column.cid)" style="padding-top: 8px;padding-bottom: 8px;">
+					<i class="mf-blue-color" ng-class="{'ion-android-checkbox-outline-blank': !content[column.cid],'ion-android-checkbox-outline': content[column.cid]}" style="font-size:24px;" ></i>
+				</ion-item>
+				<!-- 日期 -->
+				<ion-item ng-if="column.type == 'date'" ng-click="pickerDate(content,column.cid)">
+					<p>{{formatDate(content[column.cid])}}</p>
+				</ion-item>
+				<!-- 文本框/文本域/数字 -->
+				<ion-item ng-if="column.type != 'checkbox' && column.type != 'date'" style="padding-top: 8px;padding-bottom: 8px;">
+					<input ng-if="column.type != 'textarea'" type="{{column.type}}" ng-model="content[column.cid]" ng-blur="postData(content)" style="width: 100%;"/>
+					<textarea ng-if="column.type == 'textarea'" ng-model="content[column.cid]" ng-blur="postData(content)" style="resize: none;width: 100%;min-height: 100px;"></textarea>
+				</ion-item>
+			</div>
+			<!-- 操作记录 -->
+			<div ng-if="content.history.length>0">
+				<ion-item class="item-divider">历史记录</ion-item>
+				<ion-item>
+					<p ng-repeat="h in content.history" style="font-size: 12px;">
+						<span>{{h.date | stringToDate}}</span>,
+						<span ng-bind="h.username" style="font-weight: bold;"></span>
+					</p>
+				</ion-item>
+			</div>
+		</ion-list>
+	</ion-content>
+</ion-view>

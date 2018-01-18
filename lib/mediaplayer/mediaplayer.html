@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no,width=device-width">
+    <title>MediaPlayer</title>
+    <link href="fonts.css" rel="stylesheet">
+    <link href="mediaplayer.css" rel="stylesheet">
+</head>
+<body>
+    <media-player source="source"></media-player>
+<script src="lib/angular-1.5.3/angular.js"></script>
+<script src="mediaplayer.js"></script>
+<script>
+    angular.module('app',['mediaplayer'])
+            .run(function ($rootScope) {
+                var audio = {
+                    name: 'Nostalgia.mp3',
+                    src: 'audio/Nostalgia.mp3',
+                    type: 'audio/mp3'
+                };
+                var video = {
+                    src: 'http://vjs.zencdn.net/v/oceans.mp4',
+                    type: 'video/mp4'
+                };
+                $rootScope.source = audio;
+            })
+</script>
+</body>
+</html>

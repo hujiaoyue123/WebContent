@@ -1,0 +1,32 @@
+<div ng-if="showLinkPopup">
+	<div class="row">
+		<div ng-if="!disabledList.zhangwen" class="col"style="text-align: center;cursor:pointer;">
+			<img src="img/logo-p.png" style="width: 50px;border-radius:6px;" ng-click="operate({type: 'zwfriend'})">
+			<p style="color:#353333;">掌文</p>
+		</div>
+		<div ng-if="!disabledList.link" class="col" style="text-align: center;cursor:pointer;" ng-click="operate({type: 'makeLink'})">
+			<img src="img/share/link.png" style="width: 50px;border-radius:6px;">
+			<p style="color:#353333;">生成链接</p>
+		</div>
+		<div ng-if="!isApp && !disabledList.wxqrcode" class="col" style="text-align: center;cursor:pointer;">
+			<img src="img/share/friend.png" style="width: 50px;border-radius:6px;" ng-click="operate({type: 'wxfriend'})">
+			<p style="color:#353333;">微信</p>
+		</div>
+		<div ng-if="isApp" class="col" style="text-align: center;cursor:pointer;">
+			<img src="img/share/friend.png" style="width: 50px;border-radius:6px;" ng-click="operate({type:'friend'})">
+			<p style="color:#353333;">微信好友</p>
+		</div>
+		<div ng-if="isApp" class="col" style="text-align: center;cursor:pointer;">
+			<img src="img/share/timeline.png" style="width: 50px;border-radius:6px;" ng-click="operate({type:'timeline'})">
+			<p style="color:#353333;">朋友圈</p>
+		</div>
+	</div>
+</div>
+<div ng-if="showLinkPopupMlk" style="text-align: center;">
+	<button class="button button-block button-calm" ng-click="operate({type: 'copyLink'})">点击复制链接</button>
+</div>
+<div ng-if="showLinkPopupWxf" style="text-align:center;">
+	<qrcode version="5" size="200" data="{{shareLink}}"></qrcode>
+	<p style="margin-top:5px;">扫一扫分享</p>
+</div>
+

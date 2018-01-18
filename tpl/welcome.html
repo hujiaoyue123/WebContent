@@ -1,0 +1,8 @@
+<!-- 引导页面 -->
+<ion-view hide-nav-bar="true">
+	<ion-slide-box class="positive-bg" style="height: 100%;">
+		<ion-slide ng-repeat="page in welcomePages">
+			<ng-include src="page"></ng-include>
+		</ion-slide>
+	</ion-slide-box>
+</ion-view>

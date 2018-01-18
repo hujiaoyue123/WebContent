@@ -1,0 +1,15 @@
+<!--  -->
+<ion-list>
+    <ion-item class="item-input">
+	 	<span class="input-label">姓名</span>
+    	<span ng-bind="tempUser.username"></span>
+    </ion-item>
+	<ion-checkbox ng-if='tempUser.mobile' ng-model="tempUser.mobile_checked">
+		<p>电话</p>
+		<span ng-bind="tempUser.mobile"></span>
+	</ion-checkbox>
+	<ion-checkbox ng-if='tempUser.email' ng-model="tempUser.email_checked">
+		<p>邮箱</p>
+		<span style="white-space: initial;" ng-bind="tempUser.email"></span>
+	</ion-checkbox>
+</ion-list>

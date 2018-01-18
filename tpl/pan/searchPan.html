@@ -1,0 +1,161 @@
+<!-- 搜索 -->
+<ion-view hide-nav-bar="true" view-title="搜索">
+	<ion-header-bar class="item-input-inset mfblue" >
+		<button class="button back-button buttons button-clear header-item" ng-click="$ionicGoBack()" style="color: #fff;padding-right: 5px;">
+	    	<i class="icon ion-ios-arrow-back"></i>
+	  	</button>
+	  <!-- class="search-wrapper-light"  -->
+	  <ion-search autofocus class="search-headerbar" placeholder="搜索：文件名" filter="search.text" source="SEARCH.searchResource(str)" model="search.resources" model2="search.folders"></ion-search>
+	</ion-header-bar>
+	<ion-content class="stable-bg" has-bouncing="true" delegate-handle="searchPanScrollDelegate">
+		<!-- 资源 -->
+		<ion-list class="pan-list">
+			<!-- 普通展示方式 -->
+			<div ng-if="!isHD">
+				<!-- 文件夹 -->
+				<ion-item class="item-avatar" ng-repeat="folder in search.folders" ng-click="operate({type: 'clickFolder',folder: folder})">
+					<!-- 文件库 -->
+					<img ng-if="!$stateParams.foldertype || $stateParams.foldertype == 'user' || $stateParams.foldertype == 'org' || $stateParams.foldertype == 'dept'" style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{folder.rootid == $root.USER.folderid ? '-user': '-org'}}.png">
+					<!-- 群组文件库 -->
+					<img ng-if="$stateParams.foldertype == 'chat' || $stateParams.foldertype == 'group'"  style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{$stateParams.foldertype == 'group' ? '-user': '-org'}}.png">
+					<h2 style="line-height:20px;" ng-bind="folder.name"></h2>
+					<p>
+						<span ng-bind="folder.updatetime"></span>
+						<span ng-if="folder.size || folder.size == 0" style="margin-left: 3px;">{{folder.size}}个文件</span>
+						<span ng-if="folder.foldersize || folder.foldersize == 0" style="margin-left: 3px;">{{folder.foldersize}}个文件夹</span>
+					</p>
+					<ion-option-button class="button-positive" ng-click="operate({type: 'folderInfo',folder: folder,$event: $event})">详情</ion-option-button>
+					<ion-option-button ng-if="search.competence == 1 || folder.createuserid == $root.USER.id" class="button-calm" ng-click="operate({type: 'moveFolder',folder: folder,$event: $event})">移动</ion-option-button>
+					<ion-option-button ng-if="search.competence == 1 || folder.createuserid == $root.USER.id" class="button-assertive" ng-click="operate({type: 'deleteFolder',folder: folder,$event: $event})">删除</ion-option-button>
+					<!-- 仅文件库有标识 -->
+					<div ng-if="$stateParams.foldertype == 'org' || $stateParams.foldertype == 'dept'">
+						<!-- 权限标志 -->
+						<div ng-if="folder.isaudit != '1' && (folder.public || folder.audit)" class="file-tag">
+							<!-- 管 -->
+							<span ng-if="folder.createuserid == $root.USER.id && folder.rootid != $root.USER.folderid" class="file-manager"></span>
+							<!-- 审 -->
+							<span ng-if="folder.audit == '1'" class="file-audit"></span>
+							<!-- 公开 -->
+							<span ng-if="folder.public == '1'" class="file-share"></span>
+						</div>
+						<!-- 审核标志 -->
+						<div ng-if="folder.isaudit == '1'" class="file-tag">
+							<span class="file-unaudit"></span>
+						</div>
+					</div>
+				</ion-item>
+				<!-- 资源 -->
+				<ion-item class="item-avatar  item-icon-right" ng-repeat="res in search.resources" ng-click="operate({type: 'fileDetail',resource: res,$event: $event})">
+					<img style="border-radius:0;width:auto;height:auto;" ng-src="{{res.src}}" ng-style="{width: res.iontype == 'image'? '40px' :'auto',height: res.iontype == 'image'? '40px' :'auto'}" img-load-error="img/filetype/image.png">
+					<h2 ng-bind="res.filename" style="line-height:20px;"></h2>
+					<p>
+						<span ng-bind="res.createtime"></span>
+			        	<span style="margin-left:2px;font-size: 12px;color: gray;" ng-bind="res.filesize"></span>
+			        </p>
+			        <!-- 打开按钮 -->
+			        <i class="icon item-right-icon ion-ios-eye-outline icon-file-open" ng-click="operate({type: 'clickResource',resource: res,$event: $event})" style="font-size: 32px!important;"></i>
+	      			<ion-option-button class="button-calm" ng-click="operate({type:'share',resource: res,$event: $event})">分享</ion-option-button>
+					<ion-option-button ng-if="search.competence == 1 || res.userid == $root.USER.id" class="button-assertive" ng-click="operate({type: 'deleteResource',resource: res,$event: $event})">删除</ion-option-button>
+					<!-- 审核标志 -->
+					<div ng-if="res.isaudit == '1'" class="file-tag">
+						<span ng-if="res.isaudit == '1'" class="file-unaudit"></span>
+					</div>
+				</ion-item>
+			</div>
+			<!-- HD展示方式 -->
+			<div ng-if="isHD">
+				<!-- 文件夹 -->
+				<ion-item class="item-avatar item-hd" ng-repeat="folder in search.folders" ng-click="operate({type: 'clickFolder',folder: folder})" ng-style="{'height': folder.showTool ? '112px' : '60px'}">
+					<!-- 文件库 -->
+					<img ng-if="!$stateParams.foldertype || $stateParams.foldertype == 'user' || $stateParams.foldertype == 'org' || $stateParams.foldertype == 'dept'" style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{folder.rootid == $root.USER.folderid ? '-user': '-org'}}.png">
+					<!-- 群组文件库 -->
+					<img ng-if="$stateParams.foldertype == 'chat' || $stateParams.foldertype == 'group'"  style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{$stateParams.foldertype == 'group' ? '-user': '-org'}}.png">
+					<h2 style="line-height:20px;" ng-bind="folder.name"></h2>
+					<p>
+						<span ng-bind="folder.updatetime"></span>
+						<span ng-if="folder.size || folder.size == 0" style="margin-left: 3px;">{{folder.size}}个文件</span>
+						<span ng-if="folder.foldersize || folder.foldersize == 0" style="margin-left: 3px;">{{folder.foldersize}}个文件夹</span>
+					</p>
+					<!-- 下拉按钮 -->
+					<i class="item-right-icon dropButton" ng-click="operate({type: 'toolMenu',folder: folder,$event: $event})">
+						<i ng-if="!folder.showTool" class="icon ion-ios-arrow-down"></i>
+						<i ng-if="folder.showTool" class="icon ion-ios-arrow-up"></i>
+					</i>
+					<!-- 菜单栏 -->
+					<div ng-if="folder.showTool" class="row hx-flex-justify-content">
+						<a class="col" ng-click="operate({type: 'folderInfo',folder: folder,$event: $event})">
+							<i class="ion-ios-information-outline"></i>
+							<span>详情</span>
+						</a>
+						<a ng-if="search.competence == 1 || folder.createuserid == $root.USER.id" class="col" ng-click="operate({type: 'renameFolder',folder: folder,$event: $event})">
+							<i class="ion-ios-compose-outline"></i>
+							<span>重命名</span>
+						</a>
+						<a ng-if="search.competence == 1 || folder.createuserid == $root.USER.id" class="col" ng-click="operate({type: 'moveFolder',folder: folder,$event: $event})">
+							<i class="ion-android-bicycle"></i>
+							<span>移动</span>
+						</a>
+						<a ng-if="search.competence == 1 || folder.createuserid == $root.USER.id" class="col red-color" ng-click="operate({type: 'deleteFolder',folder: folder,$event: $event})">
+							<i class="ion-ios-trash"></i>
+							<span>删除</span>
+						</a>				
+					</div>
+					<!-- 仅文件库有标识 -->
+					<div ng-if="$stateParams.foldertype == 'org' || $stateParams.foldertype == 'dept'">
+						<!-- 权限标志 -->
+						<div ng-if="folder.isaudit != '1' && (folder.public || folder.audit)" class="file-tag">
+							<!-- 管 -->
+							<span ng-if="folder.createuserid == $root.USER.id && folder.rootid != $root.USER.folderid" class="file-manager"></span>
+							<!-- 审 -->
+							<span ng-if="folder.audit == '1'" class="file-audit"></span>
+							<!-- 公开 -->
+							<span ng-if="folder.public == '1'" class="file-share"></span>
+						</div>
+						<!-- 审核标志 -->
+						<div ng-if="folder.isaudit == '1'" class="file-tag">
+							<span class="file-unaudit"></span>
+						</div>
+					</div>
+				</ion-item>
+				<!-- 资源 -->
+				<ion-item class="item-avatar item-hd" ng-repeat="res in search.resources" ng-click="operate({type:'fileDetail',resource: res,$event: $event})" ng-style="{'height': res.showTool ? '112px' : '60px'}">
+					<img style="border-radius: 0;" ng-src="{{res.src}}" img-load-error="img/filetype/image.png">
+					<h2 ng-bind="res.filename" style="line-height:20px;"></h2>
+					<p>
+						<span ng-bind="res.createtime"></span>
+			        	<span style="margin-left:2px;font-size: 12px;color: gray;" ng-bind="res.filesize"></span>
+			        </p>
+			        <!-- 打开按钮 -->
+			        <i class="item-right-icon ion-ios-eye-outline icon-file-open" ng-click="operate({type: 'clickResource',resource: res,$event: $event})" style="font-size: 32px!important;">
+			        </i>
+					<!-- 下拉按钮 -->
+					<i class="item-right-icon dropButton" ng-click="operate({type: 'toolMenu',resource: res,$event: $event})">
+						<i ng-if="!res.showTool" class="icon ion-ios-arrow-down"></i>
+						<i ng-if="res.showTool" class="icon ion-ios-arrow-up"></i>
+					</i>
+					<!-- 菜单栏 -->
+					<div ng-if="res.showTool" ng-click="operate({$event: $event})" class="row hx-flex-justify-content">
+						<a class="col" ng-click="operate({type:'share',resource: res,$event: $event})">
+							<i class="ion-share"></i>
+							<span>分享</span>
+						</a>
+						<a ng-if="search.competence == 1 || res.userid == $root.USER.id" class="col red-color" ng-click="operate({type: 'deleteResource',resource: res,$event: $event})">
+							<i class="ion-ios-trash"></i>
+							<span>删除</span>
+						</a>				
+					</div>
+					<!-- 审核标志 -->
+					<div ng-if="res.isaudit == '1'" class="file-tag">
+						<span ng-if="res.isaudit == '1'" class="file-unaudit"></span>
+					</div>
+				</ion-item>
+			</div>
+		</ion-list>
+		<!-- 无结果 -->
+		<div ng-if="search.folders.length == 0 && search.resources.length == 0" style="text-align: center;margin-top: 60px;">
+			<h4 class="no-result-color">暂无搜索结果</h4>
+		</div>
+		<!-- 分页刷新 -->
+		<ion-infinite-scroll ng-if="pageConfig.search.hasMore" on-infinite="SEARCH.pagingForSearchResource()" distance="10%"></ion-infinite-scroll>
+	</ion-content>
+</ion-view>

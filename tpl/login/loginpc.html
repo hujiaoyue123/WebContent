@@ -1,0 +1,104 @@
+<!--pc登陆页-->
+<ion-view hide-nav-bar="true" class="login-container" view-title="掌文">
+    <div class="logo" ui-sref="home" style="position: absolute;top: 0;">
+        <img src="img/login/logo.png"/>
+        <span style="color: #fff;">微掌文科技</span>
+    </div>
+    <div class="login" ng-init="currentForm='login'" style="position: absolute;top: 80px;left: 0;right: 0;">
+        <!--登录-->
+        <div class="login-pane" ng-show="currentForm == 'login'">
+            <h2>登 录</h2>
+            <form ng-submit="USER.login()">
+                <div class="icon-right">
+                    <input type="text" placeholder="手机号码" maxlength="11" ng-model="user.loginname" input-to-number/>
+                    <div>
+                        <img src="img/login/phone.png"/>
+                    </div>
+                </div>
+                <div class="icon-right">
+                    <input type="password" placeholder="请输入密码" maxlength="20" ng-model="user.password"/>
+                    <div>
+                        <img src="img/login/lock.png"/>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="button login-button">登录</button>
+                </div>
+            </form>
+            <div class="bottom-bar">
+                <span ng-if="$root.CONFIG.internet" ng-click="currentForm = 'code'">验证码登录</span>
+                <span ng-if="$root.CONFIG.internet" ng-click="currentForm = 'register'">注册</span>
+            </div>
+        </div>
+        <!--验证码登录-->
+        <div class="autocode-pane" ng-show="currentForm == 'code'">
+            <h2>登 录</h2>
+            <form ng-submit="USER.verifyLogin()">
+                <div class="icon-right">
+                    <input type="text" placeholder="手机号" maxlength="11" ng-model="user.loginname" input-to-number/>
+                    <div>
+                        <img src="img/login/phone.png"/>
+                    </div>
+                </div>
+                <div class="qrcoce-container">
+                    <input type="number" placeholder="验证码" maxlength="6" ng-model="verify.validation"/>
+                    <button class="button getcode-button" ng-click="USER.getVerifyCode('verify')" ng-disabled="!verify.enable">
+                        <span ng-show="verify.enable">获取验证码</span>
+                        <span ng-show="!verify.enable">({{verify.time}})</span>
+                    </button>
+                </div>
+                <div>
+                    <button type="submit" class="button login-button">登录</button>
+                </div>
+            </form>
+            <div class="bottom-bar">
+                <span ng-click="currentForm = 'login'">密码登录</span>
+                <span ng-click="currentForm = 'register'">注册</span>
+            </div>
+        </div>
+        <!--注册-->
+        <div class="register-pane" ng-show="currentForm == 'register'">
+            <h2>注 册</h2>
+            <form ng-submit="USER.register()">
+                <div class="icon-right">
+                    <input type="text" placeholder="手机号" maxlength="11" ng-model="user.loginname" input-to-number/>
+                    <div>
+                        <img src="img/login/phone.png"/>
+                    </div>
+                </div>
+                <div class="qrcoce-container">
+                    <input type="text" placeholder="验证码" maxlength="6" ng-model="register.validation"/>
+                    <button class="button getcode-button" ng-click="USER.getVerifyCode('register')" ng-disabled="!register.enable">
+                        <span ng-if="register.enable">获取验证码</span>
+                        <span ng-if="!register.enable">({{register.time}})</span>
+                    </button>
+                </div>
+                <div class="icon-right">
+                    <input placeholder="姓名" maxlength="20" ng-model="register.nickname"/>
+                    <div>
+                        <img src="img/login/user.png"/>
+                    </div>
+                </div>
+                <div class="icon-right">
+                    <input type="password" placeholder="请输入密码" maxlength="20" ng-model="register.password"/>
+                    <div>
+                        <img src="img/login/lock.png"/>
+                    </div>
+                </div>
+                <div class="icon-right">
+                    <input type="password" placeholder="确认密码" maxlength="20" ng-model="register.rePassword"/>
+                    <div>
+                        <img src="img/login/lock.png"/>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="button register-button" ng-disabled="regButton">注册</button>
+                </div>
+            </form>
+            <div class="bottom-bar">
+                <span>已有账号？</span><span ng-click="currentForm = 'login'">登录</span>
+            </div>
+        </div>
+    </div>
+    <canvas id="canvas"></canvas>
+</ion-view>

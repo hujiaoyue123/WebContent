@@ -1,0 +1,48 @@
+<!-- 管理员单用户注册 -->
+<ion-modal-view ng-controller="adminRegister">
+	<ion-header-bar class="mfblue" align-title="center">
+		<h2 class="title">单个用户注册</h2>
+	</ion-header-bar>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-list class="list">
+		<form name="userform" novalidate>
+			<ion-item class="item item-input">
+				<span class="input-label">手机号码</span>
+				<input placeholder="手机号码" type="number" name="loginname" ng-model="user.loginname" required ui-validate="'validFome($value,$name)'">
+				<label style="color: red;padding-right: 10px;" ng-show="userform.loginname.$error.validator">必填</label>
+				<input type="hidden" ng-model="user.groupid">
+			</ion-item>
+			<ion-item class="item item-input">
+				<span class="input-label">姓名</span>
+				<input type="text" placeholder="姓名" name="username" ng-model="user.username" required ui-validate="'validFome($value,$name)'">
+				<label style="color: red;padding-right: 10px;" ng-show="userform.username.$error.validator">必填</label>
+			</ion-item>
+			<ion-item class="item item-input">
+				<span class="input-label">邮箱地址</span>
+				<input type="email" placeholder="email" name="email" ng-model="user.email" ui-validate="'validFome($value,$name)'">
+				<label style="color: red;padding-right: 10px;" ng-show="userform.email.$error.validator">格式不对</label>
+			</ion-item>
+			<ion-item class="item item-input">
+				<span class="input-label">座机号码</span>
+				<input placeholder="座机号码" type="text" name="phone" ng-model="user.phone" ui-validate="'validFome($value,$name)'">
+				<label style="color: red;padding-right: 10px;" ng-show="userform.phone.$error.validator">格式不对</label>
+			</ion-item>
+			<ion-toggle ng-model="user.sex" toggle-class="toggle-calm">性别<span style="float:right;" ng-if="user.sex==false">男</span><span style="float:right;" ng-if="user.sex==true">女</span></ion-toggle>
+			<ion-item class="padding">
+				<div class="row">
+					<div class="col">
+						<button type="submit" class="button button-block button-positive" ng-click="remove()" style="background-color: rgb(76,184,243)">
+							取消
+						</button>
+					</div>
+					<div class="col">
+						<button type="submit" class="button button-block button-positive" ng-disabled="userform.$invalid" ng-click="submitUser(user)" style="background-color: rgb(76,184,243)">
+							保存
+						</button>
+					</div>
+				</div>
+			</ion-item>
+		</form>
+		</ion-list>
+	</ion-content>
+</ion-modal-view>

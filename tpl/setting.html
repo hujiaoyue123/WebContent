@@ -1,0 +1,34 @@
+<!-- 个人-设置 -->
+<ion-view hide-back-button="true" view-title="设置">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button class="button back-button buttons button-clear header-item" ng-click="$ionicGoBack()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-item class="item-divider" style="padding:0;min-height:15px;"></ion-item>
+		<ion-item class="item-icon-right" ui-sref="password">
+			<h2>掌文密码</h2>
+			<i class="icon icon-accessory ion-ios-arrow-right"></i>
+		</ion-item>
+		<!--缓存-->
+		<div ng-if="isAPP">
+			<ion-toggle ng-model="$root.localConfig.cacheImage">缓存开关</ion-toggle>
+			<ion-item ng-if="$root.localConfig.cacheImage" ng-click="clearLocalFile()">清除本地文件</ion-item>
+			<ion-item ng-if="isAndroid" ng-click="clearVoiceCache()">清除本地语音聊天文件</ion-item>
+		</div>
+		<!--播放媒体-->
+		<div ng-if="isAPP">
+			<ion-item class="item-divider" style="padding:0;min-height:15px;"></ion-item>
+			<ion-toggle ng-model="$root.localConfig.allowPlayWithMobileNetwork">使用2G/3G/4G网络播放</ion-toggle>
+			<!--<ion-toggle ng-if="isAPP" ng-model="$root.localConfig.cacheImage">使用2G/3G/4G网络下载</ion-toggle>-->
+		</div>
+		<ion-item class="item-divider" style="padding:0;min-height:15px;"></ion-item>
+		<ion-item ng-click="logout()">
+			退出
+		</ion-item>
+	</ion-content>
+</ion-view>

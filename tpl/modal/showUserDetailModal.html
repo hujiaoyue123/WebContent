@@ -1,0 +1,58 @@
+<!-- 成员详情 -->
+<ion-modal-view>
+	<ion-header-bar class="mfblue" style="height: 200px">
+		<button class="button back-button buttons button-clear header-item" style="position:fixed;" ng-click="removeModal()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text">返回</span>
+			</i>
+		</button>
+		<div style="position: absolute;left: 0;width: 100%;text-align: center;" ng-style="{top: isIos?'16px': '36px'}">
+			<img class="user-avatar-large" ng-src="{{user.avatar}}" img-load-error="img/exception/user-error.png">
+		</div>
+		<!-- 账号 -->
+		<div style="position: absolute;left: 0;width: 100%;text-align: center;font-size:18px;color:#fff;cursor: pointer" ng-style="{top: isIos?'130px': '150px'}">
+			<span ng-bind="user.username"></span>
+			<i ng-if="user.sex==1" class="icon ion-male"></i>
+			<i ng-if="user.sex==0" style="color: #E87777;" class="icon ion-female"></i>
+		</div>
+	</ion-header-bar>
+	
+	<ion-content class="stable-bg" style="top: 200px">
+			<ion-list class="show-user-list">
+				<!-- 所属企业 -->
+				<ion-item ng-if="user.r !='s'" class="user-item item-icon-right" ng-repeat="org in orgs" style="min-height: inherit;padding-left: 54px;">
+					<img ng-src="{{org.avatar}}" style="border-radius: 0;left: 11px;"/>
+					<h2>{{org.name}}</h2>
+				</ion-item>
+				<ion-item ng-if="user.r !='s'"  class="item-divider" style="padding:0;min-height:15px;"></ion-item>
+				<!-- 职务 -->
+				<ion-item ng-if="user.jobs" class="item item-icon-right" style="padding-top: 8px;padding-bottom: 8px;">
+					<h2>职务</h2>
+					<p style="text-indent: 1em;font-size: 12px;white-space: normal;">{{user.jobs}}</p>
+				</ion-item>
+				<ion-item class="item item-icon-right" style="padding-top: 8px;padding-bottom: 8px;">
+					<h2>电话号码</h2>
+					<p style="text-indent: 1em;font-size: 12px;white-space: normal;">{{user.mobile}}</p>
+				</ion-item>
+				<ion-item class="item-icon-right" style="padding-top: 8px;padding-bottom: 8px;">
+					<h2>邮箱</h2>
+					<p ng-if="user.email" style="text-indent: 1em;font-size: 12px;white-space: normal;">{{user.email}}</p>
+					<p ng-if="!user.email" style="font-size: 12px;white-space: normal;">未填写</p>
+				</ion-item>
+				<!-- 个人签名 -->
+				<ion-item class="item" style="padding-top: 8px;padding-bottom: 8px;">
+					<h2>签名</h2>
+					<p ng-if="user.sign" style="white-space: normal;font-size: 12px;text-indent: 1em;">{{user.sign}}</p>
+					<p ng-if="!user.sign" style="font-size: 12px;">暂无签名</p>
+				</ion-item>
+				<!-- 标签 -->
+				<ion-item class="item" style="padding-top: 8px;padding-bottom: 8px;">
+					<h2>标签</h2>
+					<p ng-if="user.tagDescription" ng-bind="user.tagDescription" style="white-space: normal;font-size: 12px;"></p>
+					<p ng-if="!user.tagDescription" style="font-size: 12px;">暂无标签</p>
+				</span>
+				</ion-item>
+			</ion-list>
+	</ion-content>
+
+</ion-modal-view>

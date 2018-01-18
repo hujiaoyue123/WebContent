@@ -1,0 +1,10 @@
+<!-- 显示单张图片 -->
+<ion-modal-view ng-controller="showImage" class="modal-image" style="background-color: #000;">
+	<ion-content class="preview-scroll" scroll="false" ng-click="modal.remove()">
+		<ion-scroll direction="xy" zooming="true" min-zoom="1" has-bouncing="true" style="height: 100%;width: 100%;overflow-x: hidden;overflow-y: hidden;">
+			<div style="width: 100%;height: 100%;justify-content: center;align-items: center;" class="flex-box">
+				<img-transition-render style="max-width: 100%;max-height: 100%;" default-src="{{image.standbySrc}}" render-src="{{image.src}}" error-src="img/exception/preview-error.png" on-render="image.complete = true" show-loading="true" on-hold="showHoldMenu(image)"></img-transition-render>
+			</div>
+		</ion-scroll>
+	</ion-content>
+</ion-modal-view>

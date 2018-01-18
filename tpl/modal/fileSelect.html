@@ -1,0 +1,88 @@
+<!-- 移动文件 -->
+<ion-modal-view ng-controller="fileSelect">
+	<ion-header-bar class="mfblue" align-title="center">
+		<button ng-if="backList.length > 1" class="button back-button buttons  button-clear header-item" ng-click="operate({action: 'back'})">
+			<i class="icon ion-ios-arrow-back"></i>
+			<span class="back-text">
+				<span >{{backList[backList.length-1].name}}</span>
+			</span>
+		</button>
+		<h2 class="title" ng-if="backList.length <= 1" ng-if="dataPackage.title" ng-bind="dataPackage.title"></h2>
+		<div class="buttons pull-right">
+			<button class="button button-clear" ng-click="operate({type: 'close'})" style="color: #fff;font-size: 14px;">取消</button>
+			<button class="button button-clear" ng-disabled="disableBtn" ng-click="operate({action: 'ensure'})" style="color: #fff;font-size: 14px;">确定</button>
+		</div>
+	</ion-header-bar>
+	<!-- 搜索框 -->
+	<ion-header-bar class="bar bar-subheader">
+		<ion-search style="height: 37px;" class="search-list" placeholder="搜索" filter="search.text" source="SEARCH.searchResource(str)"></ion-search>
+	</ion-header-bar>
+	<ion-content class="stable-bg" has-bouncing="true" delegate-handle="fileSelect">
+		<!-- 列表 -->
+		<ion-list class="pan-list">
+			<!-- 资源结果 -->
+	        <div ng-if="!search.text">
+		        <!-- 企业 -->
+		        <ion-item class="item-avatar" ng-repeat="company in resource.company" ng-click="operate({action: company ?'clickFolder':'neworg',folder: company})" >
+					<img style="border-radius:0;width:auto;height:auto;" src="img/filetype/folder-org.png">
+					<h2 style="line-height:20px;" ng-bind="company.name"></h2>
+					<p ng-bind="company.updatetime"></p>
+				</ion-item>
+				<!-- 部门(即将废弃) -->
+				<ion-item class="item-avatar" ng-repeat="gfolder in resource.gfolder" ng-click="operate({action: 'clickFolder',folder: gfolder})">
+					<img style="border-radius:0;width:auto;height:auto;" src="img/filetype/folder-org.png">
+					<h2 style="line-height:20px;" ng-bind="gfolder.name"></h2>
+					<p ng-bind="gfolder.updatetime"></p>
+				</ion-item>
+				<!-- 部门文件夹 -->
+				<ion-item ng-if="resource.gsize>0" class="item-avatar" ng-click="operate({action: 'clickDepartmentFolder'})">
+					<img style="border-radius:0;width:auto;height:auto;" src="img/filetype/folder-org.png">
+					<h2 style="line-height:20px;">部门文件夹</h2>
+					<p>{{resource.gsize}}个</p>
+				</ion-item>
+				<!-- 收到的分享 -->
+				<ion-item class="item-avatar" ng-if="resource.inbox.id" ng-click="operate({action: 'clickFolder',folder: resource.inbox})">
+					<img style="border-radius:0;width:auto;height:auto;" src="img/filetype/folder-user.png">
+					<h2 style="line-height:20px;" ng-bind="resource.inbox.name"></h2>
+					<p ng-bind="resource.inbox.createtime"></p>
+				</ion-item>
+				<!-- 文件夹 -->
+				<ion-item class="item-avatar" ng-repeat="folder in resource.folders" ng-click="operate({action: 'clickFolder',folder: folder})">
+					<!-- 文件库 -->
+					<img ng-if="!foldertype || foldertype == 'user' || foldertype == 'org' || foldertype == 'dept'" style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{folder.rootid == $root.USER.folderid ? '-user': '-org'}}.png">
+					<!-- 群组文件库 -->
+					<img ng-if="foldertype == 'chat' || foldertype == 'group'"  style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{foldertype == 'group' ? '-user': '-org'}}.png">
+					<h2 style="line-height:20px;" ng-bind="folder.name"></h2>
+					<p ng-bind="folder.updatetime"></p>
+				</ion-item>
+				<!-- 资源 -->
+				<ion-item class="item-avatar item-icon-right" ng-repeat="resource in resource.resources" ng-click="operate({action: 'clickResource',resource: resource})">
+					<img style="border-radius:0;width:auto;height:auto;" ng-src="{{resource.src}}" img-load-error="img/filetype/image.png">
+					<h2 style="line-height:20px;" ng-bind="resource.filename"></h2>
+					<p ng-bind="resource.createtime"></p>
+					<i ng-show="resource.checked" class="icon ion-ios-checkmark mf-blue-color" style="font-size: 24px;"></i>
+				</ion-item>
+			</div>
+			<!-- 搜索结果 -->
+			<div ng-if="search.text">
+				<!-- 文件夹 -->
+				<ion-item class="item-avatar" ng-repeat="folder in search.folders" ng-click="operate({action: 'clickFolder',folder: folder})">
+					<img style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{folder.rootid == $root.USER.folderid? '-user':'-org'}}.png">
+					<h2 style="line-height:20px;" ng-bind="folder.name"></h2>
+					<p ng-bind="folder.updatetime"></p>
+				</ion-item>
+				<!-- 资源 -->
+				<ion-item class="item-avatar item-icon-right" ng-repeat="resource in search.resources" ng-click="operate({action: 'clickResource',resource: resource})">
+					<img style="border-radius:0;width:auto;height:auto;" ng-src="{{resource.src}}" img-load-error="img/filetype/image.png">
+					<h2 style="line-height:20px;" ng-bind="resource.filename"></h2>
+					<p ng-bind="resource.createtime"></p>
+					<i ng-show="resource.checked" class="icon ion-ios-checkmark mf-blue-color" style="font-size: 24px;"></i>
+				</ion-item>
+			</div>
+		</ion-list>
+		<!-- 分页刷新 -->
+		<ion-infinite-scroll ng-if="pageConfig.resource.hasMore" on-infinite="FOLDER.pagingForGetFolder()" distance="10%"></ion-infinite-scroll>
+		<!-- 分页刷新 -->
+		<ion-infinite-scroll ng-if="pageConfig.search.hasMore" on-infinite="SEARCH.pagingForSearchResource()" distance="10%"></ion-infinite-scroll>
+	</ion-content>
+</ion-modal-view>

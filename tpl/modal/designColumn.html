@@ -1,0 +1,73 @@
+<!-- zlt文件设计列  -->
+<ion-modal-view>
+	<ion-header-bar class='mfblue'>
+		<button class="button button-clear" style="color: #fff;font-size: 15px;" ng-click="ionicModal.remove()">
+		  	关闭
+		 </button>
+		<h2 class="title">定义列</h2>
+		<div class="buttons pull-right">
+			<button class="button button-clear" style="color: #fff;font-size: 15px;" ng-click="saveDesign()">
+		  		保存
+		  	</button>
+		</div>
+	</ion-header-bar>
+	
+	<ion-content>
+		<!-- col -->
+		<ion-item class="item-divider item-icon-right zltfile-item">
+			<div class="row" style="font-size: 14px;">
+				<div class="col col-10">
+					<div>显示</div>
+				</div>
+				<div class="col" >
+					<div>列名称</div>
+				</div>
+				<div class="col" >
+					<div>列类型</div>
+				</div>
+			</div>
+			<i class="icon mf-blue-color" ng-click="toggleReorderButton()" style="font-size: 14px;"><span ng-show="!showReorder">排序</span><span ng-show="showReorder">完成</span></i>
+		</ion-item>
+		<ion-list show-reorder="showReorder" can-swipe="true">
+			<!-- col -->
+			<ion-item class="zltfile-item" ng-repeat="column in columns" style="font-size: 14px;"> 
+				<div class="row" >
+						<!-- 复选框 -->
+					<div class="col col-10">
+						<i class="mf-blue-color" ng-class="{'ion-android-checkbox-outline-blank': !column.display,'ion-android-checkbox-outline': column.display}" style="font-size:24px;position: relative;top: 5px;" ng-click="column.display = !column.display"></i>
+					</div>
+					<div class="col" style="word-wrap: break-word;overflow: hidden;">
+						<input type="text" placeholder="未命名" ng-model="column.colname"/>
+					</div>
+					<div class="col" style="word-wrap: break-word;overflow: hidden;">
+						<!-- 已存在 -->
+						<div ng-if="!column.state" style="position: relative;top: 7px;color: rgba(11, 11, 11, 0.5)">
+							<span ng-if="column.type == 'text'">文本</span>
+							<span ng-if="column.type == 'textarea'">文本域</span>
+							<span ng-if="column.type == 'number'">数字</span>
+							<span ng-if="column.type == 'date'">时间</span>
+							<span ng-if="column.type == 'checkbox'">复选框</span>
+						</div>
+						<div style="position: relative;top: 5px;">
+						<!-- 新列 -->
+						<select ng-if="column.state == 'new'" ng-model="column.type" style="color: rgba(11, 11, 11, 0.5);">
+					      	<option ng-selected="column.type == 'text'" value="text">文本</option>
+					      	<option ng-selected="column.type == 'textarea'" value="textarea">文本域</option>
+					      	<option ng-selected="column.type == 'number'" value="number">数字</option>
+					      	<option ng-selected="column.type == 'date'" value="date">时间</option>
+							<option ng-selected="column.type == 'checkbox'" value="checkbox">复选框</option>
+						</select>
+						</div>
+					</div>
+				</div>
+				<!-- 功能菜单 -->
+				<ion-option-button class="button-assertive" ng-click="removeDesignRow(column)">删除</ion-option-button>
+				<ion-reorder-button class="ion-navicon" on-reorder="reorderColumn(column, $fromIndex, $toIndex)" style="color: #11c1f3;"></ion-reorder-button>
+			</ion-item>
+    		<!-- 添加 -->
+    		<ion-item class="item-divider calm" ng-click="addDesignRow()" style="text-align: center;">
+    			<i class="icon ion-plus"></i>添加
+    		</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-modal-view>

@@ -1,0 +1,84 @@
+<!-- 用户详情-->
+<ion-view hide-nav-bar="true" view-title="{{suser.username}}">
+	<!-- 信息 -->
+	<ion-header-bar class="mfblue" style="height: 200px">
+		<!-- 回退按钮 -->
+		<button class="button back-button buttons button-clear header-item" style="position:fixed;"  ng-click="$ionicGoBack()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+		<!-- 功能按钮 -->
+		<button class="button button-clear" style="position: fixed;top: 5px;right: 5px;min-width: 30px;" ng-click="openPopoverMenu($event)">
+			<i class="icon ion-android-menu"></i>
+		</button>
+		<!-- 头像 -->
+		<div style="position: absolute;left: 0;top: 36px;width: 100%;text-align: center;color:#fff;">
+			<img class="user-avatar-large" ng-src="{{suser.avatar}}" ng-click="showImage(suser)" img-load-error="img/exception/user-error.png">
+		</div>
+		<!-- 账号 -->
+		<div style="position: absolute;left: 0;top: 155px;width: 100%;font-size:18px;text-align: center;color:#fff;cursor: pointer">
+			<span ng-bind="suser.username"></span>
+			<i ng-if="suser.sex==1" class="icon ion-male"></i>
+			<i ng-if="suser.sex==0" style="color: #E87777;" class="icon ion-female"></i>
+		</div>
+	</ion-header-bar>
+	<!-- 菜单 -->
+	<ion-content class="stable-bg" has-bouncing="true" ng-class="{'has-footer': $rootScope.CONFIG.internet && suser.r !='s' && $root.USER.id != suser.id || suser.r =='s'}" style="top:200px">
+		<ion-refresher on-refresh="loadUser()"></ion-refresher>
+		<ion-list class="show-user-list">
+			<!-- 所属企业 -->
+			<ion-item ng-if="suser.r !='s'" class="user-item item-icon-right" ng-repeat="org in orgs" ng-click="clickGroup(org)" style="min-height: inherit;padding-left: 54px;">
+				<img ng-src="{{org.avatar}}" style="border-radius: 0;left: 11px;"/>
+				<h2>{{org.name}}</h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<!-- 分享的文件 -->
+			<ion-item ng-if="suser.r !='s'" class="item-icon-left item-icon-right" ng-click="friendShare(suser.id)">
+				<i class="icon ion-ios-folder-outline"></i>
+				<h2>分享的文件</h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<ion-item ng-if="suser.r !='s'"  class="item-divider" style="padding:0;min-height:15px;"></ion-item>
+			<!-- 职务 -->
+			<ion-item ng-if="suser.jobs" class="item item-icon-right" style="padding-top: 8px;padding-bottom: 8px;">
+				<h2>职务</h2>
+				<p style="text-indent: 1em;font-size: 12px;white-space: normal;">{{suser.jobs}}</p>
+			</ion-item>
+			<ion-item class="item item-icon-right" style="padding-top: 8px;padding-bottom: 8px;">
+				<h2>电话号码</h2>
+				<p style="text-indent: 1em;font-size: 12px;white-space: normal;">{{suser.mobile}}</p>
+				<i ng-if="!isPc" class="icon ion-ios-telephone-outline" ng-click="callPhone(suser.mobile)"></i>
+			</ion-item>
+			<ion-item class="item-icon-right" style="padding-top: 8px;padding-bottom: 8px;">
+				<h2>邮箱</h2>
+				<p ng-if="suser.email" style="text-indent: 1em;font-size: 12px;white-space: normal;">{{suser.email}}</p>
+				<p ng-if="!suser.email" style="font-size: 12px;white-space: normal;">未填写</p>
+			</ion-item>
+			<!-- 个人签名 -->
+			<ion-item class="item" style="padding-top: 8px;padding-bottom: 8px;">
+				<h2>签名</h2>
+				<p ng-if="suser.sign" style="white-space: normal;font-size: 12px;text-indent: 1em;">{{suser.sign}}</p>
+				<p ng-if="!suser.sign" style="font-size: 12px;">暂无签名</p>
+			</ion-item>
+			<!-- 标签 -->
+			<ion-item class="item item-icon-right" ng-click="setTags()" style="padding-top: 8px;padding-bottom: 8px;">
+				<h2>标签</h2>
+				<p ng-if="suser.tagDescription" ng-bind="suser.tagDescription" style="white-space: normal;font-size: 12px;"></p>
+				<p ng-if="!suser.tagDescription" style="font-size: 12px;">暂无标签</p>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</span>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+	<ion-footer-bar ng-if="$root.CONFIG.internet && suser.r !='s' && $root.USER.id != suser.id || suser.r =='s'" class="bar-stable">
+		<div style="width: 100%;text-align: center;">
+			<button  ng-if="suser.r !='s' && $root.USER.id != suser.id" class="button button-positive" style="margin-top:0; width:150px;margin:auto;" ng-click="chat()">
+				发消息
+			</button>
+			<button ng-if="suser.r =='s'" class="button button-positive" style="margin-top:0; width:150px;margin:auto;" ng-click="addFriend()">
+				添加好友
+			</button>
+		</div>
+	</ion-footer-bar>
+</ion-view>

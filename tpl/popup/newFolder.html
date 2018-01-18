@@ -1,0 +1,8 @@
+<ul class="list">
+	<input type="text" ng-model="form.folderName" autofocus/>
+	</li>
+</ul>
+<!-- 文件夹权限属性：公开 -->
+<ion-toggle ng-if="form.showPublic" ng-model="form.public" ng-true-value="1" ng-false-value="0" toggle-class="toggle-balanced" style="border: 0;">是否公开</ion-toggle>
+<!-- 文件夹权限属性：审批 -->
+<ion-toggle ng-if="form.showAudit"  ng-model="form.audit" ng-true-value="1" ng-false-value="0" toggle-class="toggle-balanced" style="border: 0;">是否需要审批</ion-toggle>

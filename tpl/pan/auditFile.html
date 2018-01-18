@@ -1,0 +1,34 @@
+<!-- 审核文件 -->
+<ion-view hide-back-button="true" view-title="待审核文件">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button ng-click="$ionicGoBack()" class="button back-button buttons button-clear header-item">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	
+	<ion-content class="stable-bg">
+		<!-- 下拉刷新 -->
+		<ion-refresher on-refresh="getResourceAudits()"></ion-refresher>
+		<ion-list class="pan-list">
+			<ion-item class="item-avatar item-icon-right" ng-repeat="resource in resources" ng-click="enterFileDetail(resource)" on-swipe-left="enterFileDetail(resource)">
+				<img style="border-radius: 0;" ng-src="{{resource.src}}" img-load-error="img/filetype/image.png">
+				<h2 ng-bind="resource.filename" style="line-height:20px;"></h2>
+				<p>
+					<span ng-bind="resource.createtime"></span>
+					<span ng-if="resource.type == 'resource'" ng-bind="resource.filesize"></span>
+					<span ng-bind="resource.username"></span>
+		        </p>
+		        <i class="icon icon-accessory ion-ios-arrow-right"></i>
+		        <!-- 标志 -->
+				<div ng-if="resource.isaudit == '1'" class="file-tag">
+					<span ng-if="resource.isaudit == '1'" class="file-unaudit"></span>
+				</div>
+			</ion-item>
+		</ion-list>
+		<!-- 分页刷新 -->
+		<ion-infinite-scroll ng-if="pageConfig.hasMore" on-infinite="pagingForGetResourceAudits()"></ion-infinite-scroll>
+	</ion-content>
+</ion-view>

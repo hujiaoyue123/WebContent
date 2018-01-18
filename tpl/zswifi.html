@@ -1,0 +1,27 @@
+<!-- 无线网络 -->
+<ion-view view-title="无线网络">
+	<!-- 中央 -->
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-list>
+		<!-- 
+			<ion-item class="item-icon-right" ng-click="operate({type: 'offConnDevice'})">
+				<h2 style="color: gray;">无线网络</h2>
+				<i class="icon" style="right:35px;font-size:16px;"><span ng-if="zsettingItems.wifiConnect == 'ON' ">开</span><span ng-if="zsettingItems.wifiConnect == 'OFF' ">关</span></i>
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+		-->
+			<ion-toggle ng-model="zsettingItems.wifiConnectbut"
+		                ng-change="operate({type: 'offConnDevice'})">
+		      <h2 style="color: gray;">无线网络</h2>
+		    </ion-toggle>
+			
+			<ion-item class="item-divider" style="padding:0;min-height:15px;"></ion-item>
+			
+		    <ion-item ng-repeat=" item in zsettingItems.wlanApList track by $index " class="item-icon-right" ng-click="operate({type: 'connectOneWifi',item:{{item}}})">
+				<h2 style="color: gray;">{{item.dspName}}</h2>
+				<i class="icon" style="right:35px;font-size:16px;"><span class="ion-wifi" ></span></i>
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			</ion-list>
+	</ion-content>
+</ion-view>

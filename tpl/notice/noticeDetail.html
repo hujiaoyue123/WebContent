@@ -1,0 +1,40 @@
+<!-- 公告详情-->
+<ion-view view-title="公告详情">
+	<ion-nav-buttons side="right">
+		<button ng-if="role>0" class="button button-clear" ng-click="alertRemoveNotice()" style="color: #fff;font-size: 14px;">
+			<i class="icon icon ion-ios-trash"></i>
+		</button>
+	</ion-nav-buttons>
+	
+	<ion-content class="stable-bg" ng-class="{'has-footer': role>0}" overflow-scroll='true'>
+		<ion-refresher on-refresh="getNoticeDetail()"></ion-refresher>
+		<div class="list">
+			<!-- 标题 -->
+			<div class="item item-text-wrap stable-bg">
+				<h2 ng-bind="notice.title"></h2>
+				<p><span ng-bind="notice.updateusername" style="font-size: 12px;"></span><span ng-bind="notice.updateTime" style="margin-left: 5px;font-size: 12px;"></span></p>
+			</div>
+			<!-- 正文 -->
+			<div class="item stable-bg" ng-class="{'item-body': notice.image,'item-text-wrap': !notice.image}" style="border-bottom: 0;">
+				<img ng-if="notice.image" ng-click="openAnnex(notice.imageFile)" style="max-width: 100%;max-height: 300px;" ng-src="{{notice.image}}">
+				<p ng-if="notice.content" autolinker class="user-can-select" ng-bind="notice.content" style="color: #000;white-space: pre-line;"></p>
+			</div>
+			<!-- 文件 -->
+			<div class="item stable-bg" ng-if="notice.files && notice.files.length>0" style="border: 1px dashed #ddd;padding-top: 8px;">
+				<p><span>附件</span></p>
+				<div class="row" style="flex-wrap: wrap;">
+					<div class="col" ng-repeat="file in notice.files" ng-click="openAnnex(file)" style="text-align: center;cursor: pointer;">
+						<div style="width: 50px;height: 50px;margin: auto;">
+							<img style="max-width: 100%;max-height: 100%;" ng-src="{{file.src}}">
+						</div>
+						<p style="font-size: 12px;max-width: 120px;margin: auto;">{{file.filename}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ion-content>
+	
+	<ion-footer-bar ng-if="role>0" style="border-top: 1px solid #ddd;">
+		<button class="button button-full button-clear button-positive" ng-click="editNotice(notice)" style="margin: 0;">编辑公告</button>
+	</ion-footer-bar>
+</ion-view>

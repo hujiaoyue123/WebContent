@@ -1,0 +1,9 @@
+<!--资源排序-->
+<button class="button button-block" ng-click="setSort('name')" ng-style="{color: $root.localConfig.sortResource == 'name' ? 'rgb(76,184,243)' : '#444'}">
+    按名称排序
+    <i ng-show="$root.localConfig.sortResource == 'name'" class="ion-android-done" style="position: absolute;top: 5px;right: 8px;color: rgb(76,184,243);font-size: 22px;"></i>
+</button>
+<button class="button button-block" ng-click="setSort('date')" ng-style="{color: $root.localConfig.sortResource == 'date' ? 'rgb(76,184,243)' : '#444'}">
+    按时间排序
+    <i ng-show="$root.localConfig.sortResource == 'date'" class="ion-android-done" style="position: absolute;top: 5px;right: 8px;color: rgb(76,184,243);font-size: 22px;"></i>
+</button>

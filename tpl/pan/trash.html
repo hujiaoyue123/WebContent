@@ -1,0 +1,107 @@
+<!--回收站-->
+<ion-view view-title="回收站" hide-back-button="true">
+    <!-- 回退按钮 -->
+    <ion-nav-buttons side="left">
+        <button ng-click="$ionicGoBack()" class="button back-button buttons button-clear header-item">
+            <i class="icon ion-ios-arrow-back">
+                <span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+            </i>
+        </button>
+    </ion-nav-buttons>
+    <ion-content class="stable-bg" ng-class="{'pan-noresult': (resource.resources.length ==0 && resource.folders.length == 0)}">
+        <!-- 下拉刷新 -->
+        <ion-refresher on-refresh="onUpRefresh()"></ion-refresher>
+        <!-- 列表 -->
+        <ion-list class="pan-list">
+            <!-- mobile展示方式 -->
+            <div ng-if="!isHD">
+                <!-- 文件夹 -->
+                <ion-item class="item-avatar" ng-repeat="folder in resource.folders" ng-click="showOperateActionSheet({type: 'folder',folder: folder})">
+                    <!-- 文件库 -->
+                    <img ng-if="!foldertype || foldertype == 'user' || foldertype == 'org' || foldertype == 'dept'" style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{folder.rootid == $root.USER.folderid ? '-user': '-org'}}.png">
+                    <!-- 群组文件库 -->
+                    <img ng-if="foldertype == 'chat' || foldertype == 'group'"  style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{foldertype == 'group' ? '-user': '-org'}}.png">
+                    <h2 style="line-height:20px;" ng-bind="folder.name"></h2>
+                    <p>
+                        <span ng-bind="folder.updatetime"></span>
+                        <span ng-if="folder.size || folder.size == 0" style="margin-left: 3px;">{{folder.size}}个文件</span>
+                        <span ng-if="folder.foldersize || folder.foldersize == 0" style="margin-left: 3px;">{{folder.foldersize}}个文件夹</span>
+                    </p>
+                    <ion-option-button ng-if="resource.competence == 1 || folder.createuserid == $root.USER.id" class="button-calm" ng-click="$event.stopPropagation();FOLDER.recoverFolder(folder)">还原</ion-option-button>
+                    <ion-option-button ng-if="resource.competence == 1 || folder.createuserid == $root.USER.id" class="button-assertive" ng-click="$event.stopPropagation();POPUP.deleteFolder(folder)">删除</ion-option-button>
+                </ion-item>
+                <!-- 资源 -->
+                <ion-item class="item-avatar item-icon-right" ng-repeat="res in resource.resources" ng-click="showOperateActionSheet({type: 'resource',resource: res})">
+                    <img style="border-radius: 0;" ng-src="{{res.src}}" img-load-error="img/filetype/image.png">
+                    <h2 ng-bind="res.filename" style="line-height:20px;"></h2>
+                    <p>
+                        <span ng-bind="res.createtime"></span>
+                        <span style="margin-left:2px;font-size: 12px;color: gray;" ng-bind="res.filesize"></span>
+                    </p>
+                    <ion-option-button class="button-calm" ng-click="$event.stopPropagation();RESOURCE.recoverResource(res)">还原</ion-option-button>
+                    <ion-option-button ng-if="competence == 1 || res.userid == $root.USER.id" class="button-assertive" ng-click="$event.stopPropagation();POPUP.deleteResource(res)">删除</ion-option-button>
+                </ion-item>
+            </div>
+            <!-- HD展示方式 -->
+            <div ng-if="isHD">
+                <!-- 文件夹 -->
+                <ion-item class="item-avatar item-hd" ng-repeat="folder in resource.folders" ng-click="showOperateActionSheet({type: 'folder',folder: folder})" ng-style="{'height': folder.showTool ? '112px' : '60px'}">
+                    <!-- 文件库 -->
+                    <img ng-if="!foldertype || foldertype == 'user' || foldertype == 'org' || foldertype == 'dept'" style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{folder.rootid == $root.USER.folderid ? '-user': '-org'}}.png">
+                    <!-- 群组文件库 -->
+                    <img ng-if="foldertype == 'chat' || foldertype == 'group'"  style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{foldertype == 'group' ? '-user': '-org'}}.png">
+                    <h2 style="line-height:20px;" ng-bind="folder.name"></h2>
+                    <p>
+                        <span ng-bind="folder.updatetime"></span>
+                        <span ng-if="folder.size || folder.size == 0" style="margin-left: 3px;">{{folder.size}}个文件</span>
+                        <span ng-if="folder.foldersize || folder.foldersize == 0" style="margin-left: 3px;">{{folder.foldersize}}个文件夹</span>
+                    </p>
+                    <!-- 下拉按钮 -->
+                    <i class="item-right-icon dropButton" ng-click="toggleMenu(folder,$event)" style="cursor: pointer;">
+                        <i ng-if="!folder.showTool" class="icon ion-ios-arrow-down"></i>
+                        <i ng-if="folder.showTool" class="icon ion-ios-arrow-up"></i>
+                    </i>
+                    <!-- 菜单栏 -->
+                    <div ng-if="folder.showTool" class="row hx-flex-justify-content" ng-click="$event.stopPropagation()">
+                        <a class="col" ng-click="FOLDER.recoverFolder(folder)">
+                            <i class="ion-ios-undo"></i>
+                            <span>还原</span>
+                        </a>
+                        </a>
+                        <a class="col red-color" ng-click="POPUP.deleteFolder(folder)">
+                            <i class="ion-ios-trash"></i>
+                            <span>删除</span>
+                        </a>
+                    </div>
+                </ion-item>
+                <!-- 资源 -->
+                <ion-item class="item-avatar item-hd" ng-repeat="res in resource.resources" ng-click="showOperateActionSheet({type: 'resource',resource: res})" ng-style="{'height': res.showTool ? '112px' : '60px'}">
+                    <img style="border-radius: 0;" ng-src="{{res.src}}" img-load-error="img/filetype/image.png">
+                    <h2 ng-bind="res.filename" style="line-height:20px;"></h2>
+                    <p>
+                        <span ng-bind="res.createtime"></span>
+                        <span style="margin-left:2px;font-size: 12px;color: gray;" ng-bind="res.filesize"></span>
+                    </p>
+                    <!-- 下拉按钮 -->
+                    <i class="item-right-icon dropButton" ng-click="toggleMenu(res,$event)">
+                        <i ng-if="!res.showTool" class="icon ion-ios-arrow-down"></i>
+                        <i ng-if="res.showTool" class="icon ion-ios-arrow-up"></i>
+                    </i>
+                    <!-- 菜单栏 -->
+                    <div ng-if="res.showTool" class="row hx-flex-justify-content" ng-click="$event.stopPropagation()">
+                        <a class="col" ng-click="RESOURCE.recoverResource(res)">
+                            <i class="ion-ios-undo"></i>
+                            <span>还原</span>
+                        </a>
+                        <a class="col red-color" ng-click="POPUP.deleteResource(res)">
+                            <i class="ion-ios-trash"></i>
+                            <span>删除</span>
+                        </a>
+                    </div>
+                </ion-item>
+            </div>
+        </ion-list>
+        <!-- 分页刷新 -->
+        <ion-infinite-scroll ng-if="pageConfig.hasMore" on-infinite="onDownRefresh()" distance="10%"></ion-infinite-scroll>
+    </ion-content>
+</ion-view>

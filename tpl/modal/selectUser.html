@@ -1,0 +1,103 @@
+<!-- 选择成员-->
+<ion-modal-view ng-controller="selectUser">
+	<ion-header-bar class="mfblue"  align-title="center">
+		<button ng-if="parent.length > 1" class="button back-button buttons  button-clear header-item" ng-click="operate({type: 'back'})">
+			<i class="icon ion-ios-arrow-back"></i>
+			<span class="back-text">
+				<span>{{parent[parent.length-1].name}}</span>
+			</span>
+		</button>
+		<h2 class="title" ng-if="parent.length == 1">{{title}}</h2>
+		<div class="buttons pull-right">
+		<button class="button button-clear" ng-click="newGroupProxy.remove()" style="color: #fff;font-size: 15px;">
+			<i>取消</i>
+		</button>
+		<button ng-disabled="users.length<selectMin" class="button button-clear" ng-click="newGroupProxy.save()" style="color: #fff;font-size: 15px;">
+			<i>确定</i>
+		</button>
+		</div>
+	</ion-header-bar>
+	<!-- 选择的人员 + 搜索框 -->
+	<ion-header-bar class="bar bar-subheader">
+		<ion-scroll delegate-handle="zwSelectImages" zooming="true" direction="x" style="overflow-x: hidden;max-width: 74%;float: left;white-space: nowrap;">
+			<div ng-repeat="user in users" ng-click="newGroupProxy.showTips(user)"
+			 style="display: inline-block;margin: 0 2px;width: 36px;height: 36px;cursor: pointer;" ng-style="{opacity: user.delmark ? 0.6: 1}">
+				<img ng-if="user.avatar" ng-src="{{user.avatar}}" width="36px" height="36px" ng-style="{borderRadius:user.username?'50%':0}"/>
+				<div ng-if="user.photos.length == 3" style="width:10px;height:1px; float:left;"></div>
+				<div ng-if="user.photos.length == 2" style="width:40px;height:8px;float:left;"></div>
+				<img ng-if="user.photos" ng-repeat="photo in user.photos" ng-src="{{photo}}" style="width: 18px;height: 18px;border-radius:50%;float: left;"/>
+			</div>
+		</ion-scroll>
+		<ion-search style="min-width: 25%;height: 37px;padding-left: 2px;" class="search-selectuser" placeholder="搜索：用户名，手机号，标签，职务" filter="search.text" source="SEARCH.searchUser(str)" model="search.users" del-key-down="operate({type: 'beforeDelete',keycode: keycode})"></ion-search>
+	</ion-header-bar>
+	<ion-content class="stable-bg" has-bouncing="true" delegate-handle="selectUserScrollDelegate">
+		<!-- 列表 -->
+		<div ng-if="showTip" class="mfblue" style="width:100%;"><span ng-bind="selectUserTip" style="padding-left:20px;"></span></div>
+		<ion-list class="select-contact-list">
+			<!-- 资源 -->
+			<div ng-if="!search.text">
+				<!-- 企业 -->
+				<ion-item ng-repeat="org in newGroup.orgs" class="item item-avatar item-icon-right user-item"
+					 ng-click="CONTACT.getUserByDeptId(org)">
+					<img ng-src="{{org.avatar}}"  style="border-radius: 0px;">
+					<h2>
+						<span ng-bind="org.name"></span>
+						<i class="ion-ribbon-b energized" style="margin-left:5px;"></i>
+					</h2>
+					<!-- 禁用checkbox
+					<i class="icon mf-blue-color" ng-if="selectParam.checkbox" ng-class="{'ion-android-checkbox-outline-blank': !org.checked,'ion-android-checkbox-outline': org.checked}" 
+						style="right:30px;font-size:24px;" ng-click="newGroupProxy.select(org,$event)"></i>
+						 -->
+					<i class="icon ion-ios-arrow-right icon-accessory" style="right: 3px;color:#ccc;font-size:16px;"></i>
+				</ion-item>
+				<!-- 群组 -->
+				<!-- 首页是群组链接 -->
+				<ion-item ng-if="selectParam.showGroup && parent.length==1" class="item-icon-left item-icon-right contact-icon" ng-click="CONTACT.getUserByDeptId({id:0,name:'群组',type:0})" style="padding-left: 72px;">
+					<i class="icon ion-android-contacts energized" style="left: 20px;"></i>
+					<h2 style="font-size: 14px;">群组</h2>
+					<i class="icon ion-ios-arrow-right icon-accessory"></i>
+				</ion-item>
+				<!-- 群组列表 -->
+				<ion-item ng-if="showGroup" ng-repeat="org in newGroup.groups" class="item item-avatar item-icon-right user-item" style="min-height: 56px" 
+					 ng-click="newGroupProxy.select(org,$event)">
+					<div ng-if="org.photos.length>1 && !org.photo" class="hx-group-avatar">
+							<div ng-if="org.photos.length == 3" style="width:10px;height:1px; float:left;"></div>
+							<div ng-if="org.photos.length == 2" style="width:40px;height:8px;float:left;"></div>
+							<img ng-repeat="pic in org.photos" ng-src="{{pic}}">
+					</div>
+					<img ng-if="org.photos.length==1 && !org.photo" class="hx-group-avatar" style="width: 40px;height: 40px;border-radius: 0;" ng-src="{{org.photos[0]}}">
+					<img ng-if="org.photo" class="hx-group-avatar" style="width: 40px;height: 40px;border-radius: 0;" ng-src="{{org.photo}}">
+					<h2>
+						<span ng-bind="org.name"></span>
+					</h2>
+					<i class="icon mf-blue-color" ng-if="selectParam.checkbox" ng-class="{'ion-android-checkbox-outline-blank': !org.checked,'ion-android-checkbox-outline': org.checked}" 
+						style="right:30px;font-size:24px;"></i>
+				</ion-item>
+				<!-- 个人 -->
+				<ion-item ng-repeat="usr in newGroup.users" class="item item-avatar user-item item-icon-right"  
+						  ng-click="beforeShowUserDetail(usr.id)">
+					<img style="top:7px;" ng-src="{{usr.avatar}}">
+					<h2 style="line-height:20px;">{{usr.username}}</h2>
+					<i class="icon mf-blue-color" ng-if="selectParam.checkbox || selectParam.userCheckbox" ng-click="newGroupProxy.select(usr,$event)"
+						ng-class="{'ion-android-checkbox-outline-blank': !usr.checked,'ion-android-checkbox-outline': usr.checked}"
+						style="right:30px;font-size:24px;"></i>
+				</ion-item>
+			</div>
+			<!-- 搜索 -->
+			<div ng-if="search.text">
+			<!-- 个人 -->
+				<ion-item ng-repeat="usr in search.users" class="item item-avatar user-item item-icon-right"  
+						  ng-click="beforeShowUserDetail(usr.id)">
+					<img style="top:7px;" ng-src="{{usr.avatar}}">
+					<h2 style="line-height:20px;">{{usr.username}}</h2>
+					<i class="icon mf-blue-color" ng-if="selectParam.checkbox || selectParam.userCheckbox" ng-click="newGroupProxy.select(usr,$event)"
+						ng-class="{'ion-android-checkbox-outline-blank': !usr.checked,'ion-android-checkbox-outline': usr.checked}"
+						style="right:30px;font-size:24px;" ></i>
+				</ion-item>
+			</div>
+		</ion-list>
+		<!-- 上拉刷新 -->
+		<ion-infinite-scroll ng-if="pageConfig.contact.hasMore" on-infinite="CONTACT.pagingForGetUserByDeptId()" distance="10%"></ion-infinite-scroll>
+		<ion-infinite-scroll ng-if="pageConfig.search.hasMore" on-infinite="SEARCH.pagingForSearchUser()" distance="10%"></ion-infinite-scroll>
+	</ion-content>
+</ion-modal-view>

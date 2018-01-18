@@ -1,0 +1,36 @@
+<!-- 创建或加入企业 -->
+<ion-view hide-back-button="true" view-title="加入企业">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button ng-click="$ionicGoBack()" class="button back-button buttons  button-clear header-item">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<!-- 搜索 -->
+	<ion-header-bar class="bar-subheader item-input-inset search-bar stable-bg">
+		<label class="item-input-wrapper">
+			<i class="icon  ion-ios-search-strong placeholder-icon"></i>
+			<input type="search" scope-field="srhInput" placeholder="输入您的企业名称" ng-model="search.text" ng-change="searchOrg(search.text)">
+       	</label>
+       	<div class="search-btn-wrap">
+			<button class="button" ng-click="beforeNewOrg(search.text)" ng-hide="!search.text || search.text==''">创建新企业</button>
+		</div>
+	</ion-header-bar>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-list>
+			<ion-item ng-repeat="org in orgList" class="item item-avatar message-item" ng-click="enterOrgDetail(org)">
+				<img ng-src="{{org.avatar}}" style="border-radius: 0;"/>
+				<h2 style="line-height:20px;">{{org.name}}
+					<i class="ion-checkmark-circled" ng-if="org.orglevel == 1" style="color: #FEC92F;float: right;font-size: 16px;"></i>
+				</h2>
+				<p>{{org.intro ? org.intro : '暂无简介'}}</p>
+			</ion-item>
+		</ion-list>
+		<!-- 无结果 -->
+		<div ng-if="orgList == 0" style="text-align: center;margin-top: 60px;">
+			<h4 class="no-result-color">暂无搜索结果</h4>
+		</div>
+	</ion-content>
+</ion-view>

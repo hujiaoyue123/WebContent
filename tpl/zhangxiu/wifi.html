@@ -1,0 +1,37 @@
+<!-- 无线网络 -->
+<ion-view view-title="无线网络">
+	<!-- 右侧功能菜单 -->
+	<!-- <ion-nav-buttons side="right">
+		<label class="button button-clear button-light" ng-click="disConnectWifi()">
+			<i class="icon ion-ios-close-outline" style="width:20px;">断开WIFI</i>
+		</label>
+	</ion-nav-buttons> -->
+	<!-- 中央 -->
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-list>
+			<!-- <ion-toggle ng-model="settings.wifiConnectBtn" ng-click="toggleWifiBtn(settings.wifiConnectBtn)">
+		      	<h2 style="color: gray;">无线网络</h2>
+		    </ion-toggle> -->
+		    <ion-item class="item-icon-right">
+				<h2 style="color: gray;">无线网络</h2>
+				<!-- <i class="icon" style="color:#387ef5;right: 16px;font-size:16px;">
+					掌秀成为WiFi热点
+				<i class="icon icon-accessory "></i> -->
+			</ion-item>
+		    <!-- 搜索状态 -->
+			<ion-item class="item-divider">
+				<p>
+					获取网络...
+					<!-- loading -->
+					<ion-spinner ng-if="status.searchingWifi" icon="ios-small" style="position: absolute;top: 0;left: 80px;height: 100%;display: flex;align-items: center;"></ion-spinner>
+				</p>
+			</ion-item>
+			<!-- wifi列表 -->
+		    <ion-item ng-repeat="wlan in settings.wlanList track by $index" class="item-icon-right" ng-click="connect(wlan)">
+				<h2 style="color: gray;">{{wlan.dspName}}</h2>
+				<i class="icon" style="right:35px;font-size:16px;"><span class="ion-wifi"></span></i>
+				<i class="icon icon-accessory"></i>
+			</ion-item>
+			</ion-list>
+	</ion-content>
+</ion-view>

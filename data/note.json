@@ -1,0 +1,30 @@
+{
+	"filename": "未命名",
+	"fileext": "zlt",
+	"cols": [{
+		"cid": "c1",
+		"colname": "",
+		"display": true,
+		"type": "checkbox"
+	},{
+		"cid": "c2",
+		"colname": "标题",
+		"display": true,
+		"type": "text"
+	},{
+		"cid": "c3",
+		"colname": "时间",
+		"display": true,
+		"type": "date"
+	}],
+	"content": [{
+		"c1": true,
+		"c2":"测试",
+		"c3": 1466583895179
+		
+	},{
+		"c1": true,
+		"c2":"测试2",
+		"c3": 1466583895179
+	}]
+}

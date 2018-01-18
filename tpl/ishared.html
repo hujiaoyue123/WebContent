@@ -1,0 +1,56 @@
+<!-- 我分享的 (已取消)-->
+<ion-view view-title="我的分享">
+	<ion-nav-buttons side="left">
+		<button ng-click="$ionicGoBack()" class="button back-button buttons  button-clear header-item">
+			<i class="icon ion-ios-arrow-back"></i> 
+		</button>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-refresher on-refresh="SHARE.getShareMeTo()"></ion-refresher>
+		<ion-list class="pan-list">
+			<!-- mobile展示方式 -->
+			<div ng-if="!isHD">
+				<ion-item ng-repeat="share in shareList" ng-class="{'item-avatar': share.resource != null,'.hx-item-divider': share.date != null,'hx-item-complex': share.date != null}" >
+					<img ng-if="share.resource" ng-src="{{share.resource.src}}" style="border-radius:0;">
+	      			<h2 ng-if="share.resource"style="line-height:20px;" ng-bind="share.resource.filename"></h2>
+	      			<p ng-if="share.resource">分享于 <span ng-bind="share.resource.createtime"></span></p>
+	      			<p ng-show="!share.resource">
+	      				<span style="margin-left:10px;" ng-bind="share.date"></span>
+	      				<span style="margin-left:6px;" ng-bind="share.des"></span>
+	      			</p>
+	      			<!-- 滑动按钮 -->
+	      			<ion-option-button ng-if="share.resource" class="button-calm" ng-click="operate({action: 'share',share: share,$event: $event)}"> 分 享 </ion-option-button>
+					<ion-option-button ng-if="share.resource" class="button-assertive" ng-click="operate({action: 'remove',share: share,$event: $event)})"> 删 除 </ion-option-button>
+				</ion-item>
+			</div>
+			<!-- HD展示方式 -->
+			<div ng-if="isHD">
+				<ion-item ng-repeat="share in shareList" class="item-avatar item-hd" ng-style="{'height': share.showTool ? '112px' : '60px'}">
+					<img ng-src="{{share.resource.src}}" style="border-radius: 0;">
+	      			<h2 ng-bind="share.resource.filename"></h2>
+	      			<p>分享于 <span ng-bind="share.resource.createtime"></span></p>
+					<!-- 下拉按钮 -->
+					<i class="item-right-icon" ng-click="operate({action: 'toolMenu',share: share,$event: $event})">
+						<i ng-if="!share.showTool" class="icon ion-ios-arrow-down"></i>
+						<i ng-if="share.showTool" class="icon ion-ios-arrow-up"></i>
+					</i>
+					<!-- 菜单栏 -->
+					<div ng-if="share.showTool" class="row hx-flex-justify-content" ng-click="operate({$event: $event})">
+						<a class="col" ng-click="operate({action:'share',share: share,$event: $event})">
+							<i class="ion-share"></i>
+							<span>分享</span>
+						</a>
+						<a class="col red-color" ng-click="operate({action: 'remove',share: share,$event: $event})">
+							<i class="ion-ios-trash"></i>
+							<span>删除</span>
+						</a>				
+					</div>
+				</ion-item>
+			</div>
+		</ion-list>
+		<!-- 提示  -->
+		<div ng-if="shareList.length == 0" style="margin-top:150px;text-align:center;">
+			<h4 style="color:grey;">暂无分享记录</h4>
+		</div>
+	</ion-content>
+</ion-view>

@@ -1,0 +1,23 @@
+<!--audio模板-->
+<div class="audio-container">
+    <div class="audio-left-container">
+        <div class="audio-cover" rotate-cover></div>
+        <div class="audio-play-pause-container" ng-click="togglePlayback()">
+            <div class="audio-play-pause">
+                <i ng-show="!buffering" class="mediaIcon" ng-class="{'icon-ion-ios-play': !playing,'icon-ion-ios-pause': playing}"></i>
+                <span ng-show="buffering && playing" class="audio-loading-container" ng-include="'lib/mediaplayer/template/loading-circle.html'"></span>
+            </div>
+        </div>
+    </div>
+    <div class="audio-right-container">
+        <div>
+            <div class="audio-title" ng-bind="source.name"></div>
+            <div class="audio-duration">{{currentTime}}/{{durationTime}}</div>
+        </div>
+        <div class="audio-timeline" seek-bar>
+            <div class="audio-timeline-default">
+                <div class="audio-timeline-progress" ng-style="{'width':  processBarWidth}"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,118 @@
+<!-- 掌秀设置 -->
+<ion-view hide-back-button="true" view-title="掌秀设置 ">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button class="button back-button buttons button-clear header-item" ng-click="$ionicGoBack()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<!-- 中央 -->
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-list>
+			<!-- 搜索掌秀... -->
+			<ion-item class="item-divider">
+				<p>
+					搜索掌秀...
+					<!-- loading -->
+					<ion-spinner ng-if="status.searchingDevice" icon="ios-small" style="position: absolute;top: 0;left: 80px;height: 100%;display: flex;align-items: center;"></ion-spinner>
+				</p>
+			</ion-item>
+			<!-- 搜索的掌秀列表 -->
+			<ion-item class="item-icon-left item-icon-right" ng-repeat="device in deviceList | orderBy: 'name' track by $index" ng-click="chooseDevice(device)">
+				<i class="icon mf-blue-color" ng-class="{'ion-ios-checkmark-outline': device.selected}" style="font-size: 24px;"></i>
+				{{device.name}}
+				<i class="icon" style="right: 16px;">
+				 	<p ng-if="device.upgrade.status == 'download'" style="font-size: 12px;color: rgb(76,184,243);">正在下载...</p>
+				 	<p ng-if="device.upgrade.status == 'upload'" style="font-size: 12px;color: rgb(76,184,243);">上传中...</p>
+				 	<p ng-if="device.upgrade.status == 'install'" style="font-size: 12px;color: rgb(76,184,243);">安装中</p>
+			 	</i>
+			</ion-item>
+			
+			<div ng-repeat="device in deviceList track by $index" ng-if="device.selected">
+			<!-- 查询设备信息 -->
+			<ion-item class="item-divider">
+				<p>
+					设备信息
+					<!-- loading -->
+					<ion-spinner ng-if="status.loadingDeviceInfo" icon="ios-small" style="position: absolute;top: 0;left: 74px;height: 100%;display: flex;align-items: center;"></ion-spinner>
+				</p>
+			</ion-item>
+			<!-- 显示设备信息 -->
+			<!-- 设备名称 -->
+			<ion-item class="item-icon-right" ng-click="changeDeviceName(device)">
+				<h2 style="color: gray;">设备名称</h2>
+				<i class="icon" style="right: 16px;font-size:16px;">
+					{{device.name}}
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			<!-- 语言 -->
+			<ion-item class="item-icon-right" ng-click="chooseDeviceLanguage(device)">
+				<h2 style="color: gray;">语言</h2>
+				<i class="icon" style="right: 16px;font-size:16px;">
+					{{device.language}}
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			<!-- 连接局域网WiFi -->
+		    <ion-item class="item-icon-right" ng-click="setWifiConnection(device)">
+				<h2 style="color: gray;">连接局域网WiFi</h2>
+				<i class="icon" style="right: 16px;font-size:16px;">
+					<span ng-if="device.wifiSwitch == 'ON'">开</span>
+					<span ng-if="device.wifiSwitch == 'OFF'">关</span>
+				</i>
+				<i class="icon icon-accessory"></i>
+			</ion-item>
+			<!-- 显示设置
+			<ion-item class="item-icon-right" ng-click="chooseDeviceDisplay(device)">
+				<h2 style="color: gray;">显示设置</h2>
+				<i class="icon" style="right:35px;font-size:16px;">
+					{{device.display}}
+				<i class="icon icon-accessory "></i>
+			</ion-item> -->
+		    <!-- 5G优先 -->
+		    <ion-toggle ng-model="device.fiveG" toggle-class="toggle-balanced" ng-change="setWifiMode(device)">
+				<h2 style="color: gray;">5G优先</h2>
+			</ion-toggle>
+			
+		    <!-- 通用设置 -->
+		    <ion-item class="item-divider" style="padding:0;min-height:15px;"></ion-item>
+		    <!-- 在线升级 -->
+			<ion-item class="item-icon-right" ng-click="systemUpgrade(device)">
+				<h2 style="color: gray;">在线升级</h2>
+				<!--  -->
+				<i class="icon" style="right: 16px;">
+				 	<p ng-if="device.upgrade.status == 'download'" style="font-size: 12px;color: rgb(76,184,243);">正在下载...</p>
+				 	<p ng-if="device.upgrade.status == 'upload'" style="font-size: 12px;color: rgb(76,184,243);">上传中...</p>
+				 	<p ng-if="device.upgrade.status == 'install'" style="font-size: 12px;color: rgb(76,184,243);">安装中</p>
+				 	<p ng-if="!device.upgrade.status" style="font-size: 12px;overflow: visible;">
+				 		<span ng-if="device.version">当前版本: {{device.version}}</span>
+				 		<!-- 新版本 -->
+				 		<span ng-if="device.upgrade.newVersion" class="badge badge-assertive" style="font-size: 12px;font-weight: 500;right: 90px;">{{device.newVersion}}</span>
+				 	</p>
+				</i>
+				<!-- 进度条-->
+				<div ng-if="device.upgrade.status == 'download' || device.upgrade.status== 'upload'" style="position: absolute;left: 0;bottom: 3px;width: 100%;padding-left: 16px;padding-right: 16px;">
+					<div  style="width: 100%;height: 6px;background: rgb(76,184,243);overflow: hidden;">
+					<div style="width: 100%;height: 6px;position: relative;top: 0;background: #ddd;" ng-style="{'left': device.upgrade.progress+'%'}"></div>
+				</div>
+				</div>
+			</ion-item>
+			<!-- 恢复出厂设置 -->
+			<ion-item class="item-icon-right" ng-click="resetFactorySettings(device)">
+				<h2 style="color: gray;">恢复出厂设置</h2>
+				<i class="icon" style="right:35px;font-size:16px;">
+				<i class="icon icon-accessory"></i>
+			</ion-item>
+			<!-- 版本信息
+			<ion-item class="item-icon-right" >
+				<h2 style="color: gray;">版本信息</h2>
+				<i  class="icon" style="right:35px;font-size:16px;">
+					<span ng-if="settings.updateVersion == 1" ng-click="systemUpgrade()" >有系统更新</span>
+					<span ng-if="settings.updateVersion < 1">{{settings.deviceVersion}}</span>
+				<i class="icon icon-accessory "></i>
+			</ion-item> -->
+			</div>
+		</ion-list>
+	</ion-content>
+</ion-view>

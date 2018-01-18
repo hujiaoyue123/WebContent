@@ -1,0 +1,99 @@
+<!-- 掌秀设置 -->
+<ion-view hide-back-button="true" view-title="掌秀设置">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button class="button back-button buttons button-clear header-item" ng-click="$ionicGoBack()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<!-- 中央 -->
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-list>
+			<ion-item class="item-icon-right" ng-click="operate({type: 'connDevice'})">
+				<h2 style="color: gray;">连接设备</h2>
+				<i class="icon" style="right:35px;font-size:16px;">
+					{{zsettingItems.zsDeviceName}}
+					<ion-spinner ng-if="scan.loading" icon="spiral"></ion-spinner> 
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			
+			<ion-item class="item-divider" style="padding:0;min-height:15px;"></ion-item>
+		    <ion-item class="item-icon-right" ng-click="operate({type: 'wifiConnect'})">
+				<h2 style="color: gray;">无线网络</h2>
+				<i class="icon" style="right:35px;font-size:16px;"><span ng-if="zsettingItems.wifiConnect == 'ON' ">开</span><span ng-if="zsettingItems.wifiConnect == 'OFF' ">关</span></i>
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			<ion-item class="item-icon-right" ng-click="operate({type: 'changeDeviceName'})">
+				<h2 style="color: gray;">设备名称</h2>
+				<i class="icon" style="right:35px;font-size:16px;">
+					{{zsettingItems.deviceName}}
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			<ion-item class="item-icon-right" ng-click="operate({type: 'changeDeviceLanguage'})">
+				<h2 style="color: gray;">语言</h2>
+				<i class="icon" style="right:35px;font-size:16px;">
+					{{zsettingItems.deviceLanguage}}
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			<ion-item class="item-icon-right" ng-click="operate({type: 'changeDeviceShowZoom'})">
+				<!-- <h2 style="color: gray;">显示比例</h2> -->
+				<h2 style="color: gray;">显示设置</h2>
+				<i class="icon" style="right:35px;font-size:16px;">
+					{{zsettingItems.videoAspectRatio}}
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			<ion-toggle ion-toggle-text="5G;2.4G" class="custom-toggle"
+						ng-model="zsettingItems.wifimode"
+		                ng-change="operate({type: 'changeWifiMode'})"
+		                >
+		      <h2 style="color: gray;">网络切换</h2>
+		    </ion-toggle>
+		    <!-- 
+			<ion-item class="item-icon-right" ng-click="operate({type: 'switchsoftmode'})">
+				<h2 style="color: gray;">2.4G与5G切换</h2>
+				<i class="icon" style="right:35px;font-size:16px;">
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			
+			<ion-item class="item-icon-right" ng-click="operate({type: 'changeDeviceByUi'})">
+				<h2 style="color: gray;">屏幕设置</h2>
+				<i class="icon" style="right:35px;font-size:16px;">
+					{{zsettingItems.byui=="ON"?"4:3":"16:9"}}
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			 -->
+			<!--  -->
+			<ion-item class="item-icon-right" ng-click="operate({type: 'changeDeviceUpdate'})">
+				<h2 style="color: gray;">在线升级</h2>
+				<i class="icon" style="right:35px;">
+					<div ng-if="updating">
+						<ion-spinner icon="dots" style="fill: rgb(76,184,243);"></ion-spinner>
+					</div>
+				</i>	
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			
+			<ion-item class="item-icon-right" ng-click="operate({type: 'changeDeviceRecovery'})">
+				<h2 style="color: gray;">恢复出厂设置</h2>
+				<i class="icon" style="right:35px;font-size:16px;">
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			<!-- 
+			<ion-item class="item-icon-right" ng-click="operate({type: 'changeDeviceOnlineUp'})">
+				<h2 style="color: gray;">Online Upgrade</h2>
+				<i class="icon" style="right:35px;font-size:16px;">
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+			 -->
+			<ion-item class="item-icon-right" >
+				<h2 style="color: gray;">版本信息</h2>
+				<i  class="icon" style="right:35px;font-size:16px;">
+					<span ng-if="zsettingItems.updateVersion == 1" ng-click="operate({type: 'changeDeviceUpdate'})" >有系统更新</span>
+					<span ng-if="zsettingItems.updateVersion < 1">{{zsettingItems.deviceVersion}}</span>
+				<i class="icon icon-accessory "></i>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

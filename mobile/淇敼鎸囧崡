@@ -1,0 +1,204 @@
+//app.js
+	1.app注入ngCordova
+	2.注册backbutton
+//service.js
+	1.注入$cordovaToast,$ionicPlatform,$cordovaCamera,$cordovaFileTransfer,$cordovaInAppBrowser,$cordovaFileTransfer,$cordovaAppVersion
+	2.开放service代理
+	3.修改download下载方式
+	4.消息提醒
+	
+//controller.js
+	1.消息提醒
+//ppan.html,cpan.html
+	1.修改上传(2处)
+1.about.html
+	1.头像上传
+
+//1.controllers.js
+	1.ppanCtrl,cpanCtrl
+		//上传 --mobile
+		$scope.fileChooser = function(){
+			service.fileChooser($scope);
+		};
+		//提示
+		service.$cordovaToast.showShortBottom("");
+
+//1.app.js 
+	//注入ngCordova
+	//插件
+	app.run(function($ionicPlatform,$ionicHistory,$cordovaToast,$timeout,service,$state){
+		//返回事件
+		$ionicPlatform.ready(function(){
+			var array = ["tab.ppan","tab.cpan","tab.share","tab.about","login"];
+			//回退事件
+			var eventBackButton = function(event){
+				var view = $ionicHistory.currentView();
+				if(array.indexOf(view.stateName) != -1){
+					exitApp();
+					return;//提醒暂不开放
+					$cordovaToast.showShortBottom("再按一次退出!");
+					$ionicPlatform.offHardwareBackButton(eventBackButton); //注销事件
+					$ionicPlatform.onHardwareBackButton(exitApp);
+					//2秒后重新注册
+					$timeout(function(){
+						$ionicPlatform.offHardwareBackButton(exitApp); //注销事件
+						$ionicPlatform.onHardwareBackButton(eventBackButton);
+					},2000);
+				}
+			};
+			//退出应用
+			var exitApp = function(){
+				ionic.Platform.exitApp(); 
+			};
+			//回退键
+			$ionicPlatform.onHardwareBackButton(eventBackButton);
+		});
+	});
+//2.service.js
+	//1.注入 $cordovaCamera,$cordovaFileTransfer,$cordovaInAppBrowser,$cordovaFileTransfer,$cordovaAppVersion,$cordovaToast
+	//1.1修改上传接口
+	var itf_upload = server + "ResourceProxy/mobileResourceCreate"; //上传文件
+	var itf_c_upload = server + "OrgResourceProxy/orgMobileResourceCreate"; //上传文件
+	//2.下载方式 cordova.InAppBrowser.open(href, '_system');
+		//app更新
+		this.appversion = function(version){
+			$http.get(itf_appversion)
+			.success(function(data){
+				if(data.result == 1){
+					if(data.version != version){ //新版本提醒
+						confirm(data);
+					}else{
+						$cordovaToast.showShortBottom("当前已是最新版本!");
+					}
+				}else{
+					alert("连接不上服务器！");
+				}
+			});
+		};
+		//app更新
+		this.appversion = function(version){
+			$http.get(itf_appversion)
+			.success(function(data){
+				if(data.result == 1){
+					if(data.version != version){ //新版本提醒
+						confirm(data);
+					}else{
+						$cordovaToast.showShortBottom("当前已是最新版本!");
+					}
+				}else{
+					$cordovaToast.showShortBottom("连接不上服务器!");
+				}
+			});
+		};
+		//更新提示
+		this.confirm = confirm = function(data){
+			var popup = {};
+			popup.title = "版本更新";
+			popup.template = data.title;
+			popup.cancelText = "下次再说";
+			popup.okText = "马上更新";
+			$ionicPopup.confirm(popup)
+				.then(function(res){
+					if(res){ //执行安装
+						cordova.InAppBrowser.open(itf_appdownload, '_system');
+					}
+				});
+		};
+		//相机/相册
+		this.camera = function(scope,type){
+			var options = {},user = getUser();
+			//图片源
+			if(type == "CAMERA"){
+				options.quality = 50; //图片质量 0-100
+				options.sourceType = Camera.PictureSourceType.CAMERA; 
+				options.destinatonType = 1; //DATA_URL : 0,FILE_URI : 1,NATIVE_URI : 2
+				options.saveToPhotoAlbum = false; //拍摄完保存到相册
+			}else if(type == "PHOTOLIBRARY"){
+				options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY; 
+				options.destinatonType = 1; 
+			}else if(type == "SAVEDPHOTOALBUM"){
+				options.sourceType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
+			}
+			//可编辑
+			options.allowEdit = true; //Allow simple editing of image before selection
+			//像素设置
+			$cordovaCamera.getPicture(options)
+				.then(function(imageURI){ //图片数据
+					//使用cordovaFileTransfer
+					var server = itf_user_update; //服务器地址
+					var filePath = imageURI; //文件源
+					var options = {},params = {};
+					params.userid = user.id;
+					params.sessionid = user.sessionid;
+					options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+					options.params = params;
+					$cordovaFileTransfer.upload(server,filePath,options)
+						.then(function(result){
+							scope.init();
+						},function(error){
+							alert("upload失败");
+						},function(progress){
+							
+						});
+				})
+		};
+		//打开文件系统
+		this.fileChooser = function(scope){
+			var name = scope.ctrl.name, user = getUser();
+			var server,options={},params;
+			//个人/企业盘
+			if(name == "ppanCtrl"){
+				server = itf_upload;
+			}else if(name == "cpanCtrl"){
+				server = itf_c_upload;
+			}
+			//选择文件
+			window.plugins.mfilechooser.open([],function(uri){
+				var array = uri.split("/");
+				var filename = array[array.length-1];
+				alert(filename);
+				params.userid = user.id;
+				params.sessionid = user.sessionid;
+				params.parentid = scope.pan.id;
+				params.filename = filename;
+				options.params = params;
+				loading("start");
+				$cordovaFileTransfer.upload(server,uri,options)
+					.then(function(result){
+						scope.loadPan();
+						$cordovaToast.showShortBottom("上传成功!");
+						loading("end");
+					},function(error){
+						loading("end");
+						$cordovaToast.showShortBottom("上传失败!");
+					},function(progress){
+						console.log(progress);
+					});
+			});
+		};
+3.controllers(aboutCtrl)
+		service.getAppVersion($scope); //app版本
+		//拍照，相册，系统
+		$scope.camera = function(type){
+			if(type){
+				if(type == "SYSTEM"){
+					
+				}else{
+					service.popupWindow.close();
+					service.camera($scope, type);
+				}
+			}else{
+				service.initPopup(component.popup.camera($scope));
+			}
+		};
+4.about.html
+	//头像
+	<img style="width:120px;height:120px;border-radius:50%" ng-src="{{user.photo}}" ng-click="camera()"/>
+	//版本更新
+	<ion-item style="padding:0">
+				<a class="button button-full button-clear button-positive" ng-click="upgrade()">
+					<span ng-if="app.upgrade" style="background:red;color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;">NEW</span>
+					<span>版本更新</span>
+					<span style="color:grey;margin-left:5px;">V{{app.version}}</span>
+				</a>
+	</ion-item>

@@ -1,0 +1,159 @@
+<!-- 显示群组 -->
+<ion-view hide-nav-bar="true" view-title="详情">
+	<!-- 信息 -->
+	<ion-header-bar class="mfblue" style="height: 200px;">
+		<!-- 回退按钮 -->
+		<button class="button back-button buttons button-clear header-item" style="position:fixed;"  ng-click="goBack()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+		<!-- 头像 -->
+		<div style="position: absolute;left: 0;width:100%;text-align:center;" ng-style="{top: isIos?'16px': '36px'}">
+			<div ng-if="!isApp && cgroup.avatar">
+				<img ng-if="role>0" ng-src="{{cgroup.avatar}}" img-load-error img-load-error-fn="imgLoadError" class="group-avatar-large" ngf-select="updateGroupPhoto($files)" ngf-pattern="'image/*'" >
+				<img ng-if="role<=0" ng-src="{{cgroup.avatar}}" img-load-error img-load-error-fn="imgLoadError" class="group-avatar-large">
+			</div>
+			<img ng-if="isApp && cgroup.avatar" ng-src="{{cgroup.avatar}}" img-load-error img-load-error-fn="imgLoadError" class="group-avatar-large" ng-click="updateGroupPhotoOnMobile()">
+		</div>
+		<!-- 名称 -->
+		<div style="position: absolute;left: 0;width:100%;text-align:center;font-size:18px;color:#fff;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;" ng-style="{top: isIos?'130px': '150px'}">
+			{{cgroup.name}}
+		</div>
+		<!-- 文件使用空间 -->
+		<div ng-if="orgUsedCloudSpace && role>=0" style="position: absolute;left: 0;top: 175px;width: 100%;text-align: center;font-size: 12px;" ng-style="{top: isIos?'155px': '175px'}">
+			<span>当前空间使用:</span>
+			<span ng-bind="orgUsedCloudSpace"></span>
+		</div>
+	</ion-header-bar>
+	<!-- 菜单 -->
+	<ion-content class="stable-bg" has-bouncing="true" style="top: 200px;">
+		<ion-refresher on-refresh="init()"></ion-refresher>
+		<ion-list class="show-user-list">
+			<!-- 企业成员 -->
+			<div ng-if="role>=0">
+				<ion-item class="item-icon-left item-icon-right" ng-click="operate({action:'showMembers'})">
+					<i class="icon ion-ios-people-outline"></i>
+					<h2>成员({{cgroup.count}})人</h2>
+					<i class="icon icon-accessory ion-ios-arrow-right"></i>
+				</ion-item>
+				<ion-item class="item-icon-left item-icon-right" ng-click="operate({action:'folderPan','folderid':cgroup.folderid})">
+					<i class="icon ion-ios-folder-outline"></i>
+					<h2>文件</h2>
+					<i class="icon icon-accessory ion-ios-arrow-right"></i>
+				</ion-item>
+				<!-- 文档浏览排名 -->
+				<ion-item ng-if="cgroup.type == 1 || cgroup.type == 2" class="item-icon-left item-icon-right" ng-click="openDocumentRanking()">
+					<i class="icon ion-connection-bars"></i>
+					<h2>文档浏览排名</h2>
+					<i class="icon icon-accessory ion-ios-arrow-right"></i>
+				</ion-item>
+				<!-- 公告 -->
+				<ion-item class="item-icon-left item-icon-right" ng-click="openNoticeList()">
+					<i class="icon ion-volume-low"></i>
+					<h2>公告</h2>
+					<i class="icon icon-accessory ion-ios-arrow-right"></i>
+				</ion-item>
+			</div>
+			<!-- 组织基本信息 -->
+			<ion-item class="item-divider" style="padding:0;min-height:15px;"></ion-item>
+			<!-- 名称 -->
+			<ion-item class="item-icon-right">
+				<span style="width:50px;">名称</span><span>{{cgroup.name}}</span>
+				<i ng-if="role>0" class="icon ion-compose" style="font-size:26px;"  ng-click="operate({'action':'changeName'})"></i>
+			</ion-item>
+			<!-- 简介 -->
+			<ion-item class="item item-icon-right">
+				<h2>简介</h2>
+				<p ng-if="!cgroup.intro">暂无简介</p>
+				<p ng-if="cgroup.intro" ng-bind="cgroup.intro" style="white-space: normal;font-size: 14px;text-indent: 1em;"></p>
+				<i ng-if="role>0" class="icon ion-compose" style="font-size:26px;"  ng-click="modifyIntro($event)"></i>
+			</ion-item>
+			<!-- 创建部门 -->
+			<ion-item ng-if="cgroup.type > 0 && role >= 0" class="item-icon-right" ng-click="beforeAddGroup(cgroup,2)">
+				<h2>创建部门</h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<!-- 解散组织-创建人 -->
+			<ion-item ng-if="role == 2" ng-click="beforeDismissGroup(cgroup.id)">
+				<span ng-if="cgroup.type == 0">解散群组</span>
+				<span ng-if="cgroup.type == 1">解散企业</span>
+				<span ng-if="cgroup.type == 2">解散部门</span>
+			</ion-item>
+			<!-- 退出组织-成员/管理员 -->
+			<ion-item ng-if="role == 0 || role == 1" ng-click="beforeQuitGroup(cgroup)">
+				<span ng-if="cgroup.type == 0">退出群组</span>
+				<span ng-if="cgroup.type == 1">退出企业</span>
+				<span ng-if="cgroup.type == 2">退出部门</span>
+			</ion-item>
+			
+			<!-- 组织管理-管理员 -->
+			<ion-item class="item-divider" ng-if="role>0" style="padding:0;min-height:15px;"></ion-item>
+			<ion-item ng-if="cgroup.type==0 || role>0" class="item-icon-right" ng-click="operate({action:'addMember'})">
+				<h2>添加成员</h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<ion-item ng-if="cgroup.type!=1 && role>0" class="item-icon-right" ng-click="operate({action:'removeMember'})">
+				<h2>删除成员</h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<ion-item ng-if="cgroup.type==1 && role>0" class="item-icon-right" ng-click="operate({action:'terminateMember'})">
+				<h2>成员离职</h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<ion-item ng-if="role>0" class="item-icon-right" ng-click="operate({action:'setManager'})">
+				<h2>设置管理员</h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<!-- 认证方式 -->
+			<ion-item class="item item-icon-right" ng-if="cgroup.type==1 && role>0" ng-click="selectAuth()">
+				<h2>员工认证方式 </h2>
+				<p ng-if="!cgroup.verifytype">未设置</p>
+				<p ng-if="cgroup.verifytype" style="white-space: normal;font-size: 14px;text-indent: 1em;">
+					{{cgroup.verifytype == 'manager'? '管理员认证': '邮件域名认证'}}
+				</p>
+			</ion-item>
+			<!-- 邮箱域名 -->
+			<ion-item class="item item-icon-right" ng-if="cgroup.type==1 && role>0 && cgroup.verifytype =='email'">
+				<h2>邮箱域名 </h2>
+				<p ng-if="!cgroup.maildomain">未设置</p>
+				<p ng-if="cgroup.maildomain" ng-bind="cgroup.maildomain" style="white-space: normal;font-size: 14px;text-indent: 1em;"></p>
+				<i ng-if="role>0" class="icon ion-compose" style="font-size:26px;"  ng-click="authEmail()"></i>
+			</ion-item>
+			<!-- 企业升级 -->
+			<ion-item ng-if="$root.CONFIG.internet && cgroup.type==1 && role>0" class="item-icon-right" ng-click="operate({action:'upgradeEnt'})">
+				<h2>企业升级</h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<ion-item ng-if="cgroup.type==1 && role>0" class="item-icon-right" ng-click="operate({action:'import'})">
+				<h2>批量导入 </h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<ion-item ng-if="cgroup.type==1 && role>0" class="item-icon-right" ng-click="operate({action:'adminRegister'})">
+				<h2>单个注册 </h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<!-- 转让-仅创建人可以操作 -->
+			<ion-item ng-if="role == 2" class="item-icon-right" ng-click="operate({action:'transfer'})">
+				<h2>转让</h2>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+	
+	<ion-footer-bar class="bar-stable"  style="text-align:center;">
+		<div class="col" ng-if="cgroup.count<=200 && role>=0" style="padding: 0;">
+			<button class="button button-positive" style="margin-top:0; width:150px;margin:auto;text-align:center;" ng-click="chat()" ng-disable="chatClicked">
+				发消息
+			</button>
+		</div>
+		<div class="col" ng-if="role == -1" style="padding: 0;">
+			<button class="button button-positive"  ng-click="joinOrg(cgroup)" style="margin-top:0; width:150px;margin:auto;text-align:center;">
+			<span>加入</span>
+			<span ng-if="cgroup.type == 0">群组</span>
+			<span ng-if="cgroup.type == 1">企业</span>
+			<span ng-if="cgroup.type == 2">部门</span>
+			</button>
+		</div>
+	</ion-footer-bar>
+</ion-view>

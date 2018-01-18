@@ -1,0 +1,36 @@
+<!-- 上传列表 -->
+<ion-modal-view>
+	<ion-header-bar class="mfblue" align-title="center">
+		<h2 class="title">文件重名</h2>
+	</ion-header-bar>
+	<ion-content class="stable-bg" style="padding-bottom: 70px;">
+		<!-- 列表 -->
+		<ion-list class="pan-list">
+			<!-- 名称重复列表 -->
+			<div class="item item-divider" style="padding: 20px 10px;">
+				<p style="margin-bottom: 10px;white-space: normal;">以下文件重名，请选择操作方式，点击文件名可为单文件重命名。</p>
+				<div class="flex-box" style="justify-content: space-around;">
+					<!-- 全部覆盖 -->
+					<button class="button button-positive flex-auto" ng-click="coverAll(missFiles)" style="max-width: 100px;font-size: 13px;line-height: 0;min-height: 0;height: 30px;padding: 2px;letter-spacing: 1px;">全部覆盖</button>
+					<!-- 自动重命名 -->
+					<button class="button button-calm flex-auto" ng-click="renameAll(missFiles)" style="max-width: 100px;font-size: 13px;line-height: 0;min-height: 0;height: 30px;padding: 2px;letter-spacing: 1px;">自动重命名</button>
+					<!-- 全部跳过 -->
+					<button class="button button-light flex-auto" ng-click="ignoreAll(missFiles)" style="max-width: 100px;font-size: 13px;line-height: 0;min-height: 0;height: 30px;padding: 2px;letter-spacing: 1px;">全部跳过</button>
+				</div>
+			</div>
+			<ion-item class="item-avatar item-select" ng-repeat="file in missFiles" ng-click="renamePopup(file)" style="padding-right: 110px;">
+				<img style="border-radius:0;" ng-src="{{file.src}}"/>
+				<h2 ng-bind="file.filename || file.name"></h2>
+				<p ng-bind="file.filesize"></p>
+				<!-- 选择操作 -->
+				<select data-tap-disabled="true" ng-options="item.text for item in selectOptions" ng-init="file.selected = selectOptions[0];file.lastSelected = selectOptions[0];" ng-model="file.selected" ng-change="selectionChange(file,'{{file.selected.index}}')" ng-click="$event.stopPropagation()" style="padding-right: 32px;height: 100%;color: #666;">
+				</select>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+	<!-- 全部忽略 -->
+	<div class="stable-bg flex-box" style="position: absolute;bottom: 30px;width: 100%;justify-content: space-around;">
+		<button class="button button-calm" ng-click="ensure(missFiles)" style="width: 150px;padding-top: 5px;padding-bottom: 5px;letter-spacing: 1px;min-height: 30px;min-width: 28px;font-size: 12px;line-height: 26px;">确定</button>
+		<button class="button button-light" ng-click="cancel()" style="width: 150px;padding-top: 5px;padding-bottom: 5px;letter-spacing: 1px;min-height: 30px;min-width: 28px;font-size: 12px;line-height: 26px;">取消</button>
+	</div>
+</ion-modal-view>

@@ -1,0 +1,24 @@
+<!--掌秀勋章-->
+<ion-view view-title="徽章" cache-view="false" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button ng-click="goBackToAbout()" class="button back-button buttons button-clear header-item">
+            <i class="icon ion-ios-arrow-back">
+                <span class="back-text">返回</span>
+            </i>
+        </button>
+    </ion-nav-buttons>
+    <div style="position: absolute;top: 44px;bottom: 0;width: 100%;background: #4cb8f3;">
+        <!--勋章-->
+        <div style="text-align: center;margin-top: 30px;">
+            <img class="zx-badge" style="width: 240px;" src="img/about/badge-suit.png"/>
+        </div>
+        <!--彩带-->
+        <fireworks></fireworks>
+        <!--提示文本-->
+        <div class="zx-bindtip">
+            <h3 style="color: #fff;margin-bottom: 20px;">恭喜您成功获得奖励！</h3>
+            <p style="margin: 0;">您使用的空间已增加到{{space}}</p>
+            <p style="margin: 0;">并获得掌秀勋章一枚</p>
+        </div>
+    </div>
+</ion-view>

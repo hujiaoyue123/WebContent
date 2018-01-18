@@ -1,0 +1,32 @@
+<ion-view view-title="部门文件夹">
+	<ion-content class="stable-bg">
+		<!-- 搜索 -->
+		<search-bar ng-click="search()"></search-bar>
+		<!-- 列表 -->
+		<ion-list class="pan-list">
+			<!-- 待审文件 -->
+			<ion-item ng-if="$root.resourceAuditCount>0" ng-click="enterAuditFile()" style="cursor: pointer;">
+				<h2>您有<span ng-bind="$root.resourceAuditCount" style="color: red;font-size: 13px;padding: 0 3px;"></span>个文件待审批,点击进入</h2>
+			</ion-item>
+			<ion-item class="item-avatar item-icon-right" ng-repeat="folder in folders" ng-click="enterFolder(folder)" on-swipe-left="enterFolder(folder)">
+				<img style="border-radius:0;width:auto;height:auto;" ng-src="img/filetype/folder{{folder.rootid == $root.USER.folderid ? '-user': '-org'}}.png">
+				<h2 style="line-height:20px;" ng-bind="folder.name"></h2>
+				<p>
+					<span ng-bind="folder.updatetime"></span>
+					<span ng-if="folder.size || folder.size == 0" style="margin-left: 3px;">{{folder.size}}个文件</span>
+					<span ng-if="folder.foldersize || folder.foldersize == 0" style="margin-left: 3px;">{{folder.foldersize}}个文件夹</span>
+				</p>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+				<!-- 标志 -->
+				<div ng-if="folder.public || folder.audit" class="file-tag">
+					<!-- 管 -->
+					<span ng-if="folder.createuserid == $root.USER.id && folder.rootid != $root.USER.folderid" class="file-manager"></span>
+					<!-- 审 -->
+					<span ng-if="folder.audit == '1'" class="file-audit"></span>
+					<!-- 公开 -->
+					<span ng-if="folder.public == '1'" class="file-share"></span>
+				</div>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

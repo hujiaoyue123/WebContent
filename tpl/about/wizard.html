@@ -1,0 +1,46 @@
+<!-- 应用设置向导-->
+<ion-view view-title="{{'应用设置向导'}}" hide-back-button="true" >
+	<ion-nav-buttons side="left">
+		<button class="button back-button buttons button-clear header-item" ng-click="$ionicGoBack()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<!-- 搜索 -->
+		<ion-list>
+			<ion-item class="item-icon-left item-icon-right" nav-direction="forward" href="#/guide?name=huawei">
+				<i class="icon ion-huawei"></i>
+				<h2>华为</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<ion-item class="item-icon-left item-icon-right" nav-direction="forward" href="#/guide?name=samsung">
+				<i class="icon ion-samsung"></i>
+				<h2>三星</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<ion-item class="item-icon-left item-icon-right" nav-direction="forward" href="#/guide?name=xiaomi">
+				<i class="icon ion-xiaomi"></i>
+				<h2>小米</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<ion-item class="item-divider" style="padding:0;min-height:15px;"></ion-item>
+			<ion-item class="item-icon-left item-icon-right" nav-direction="forward" href="#/guide?name=safe360">
+				<i class="icon ion-safe"></i>
+				<h2>360手机卫士</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<ion-item class="item-icon-left item-icon-right" nav-direction="forward" href="#/guide?name=clear360">
+				<i class="icon ion-clear"></i>
+				<h2>360清理大师</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<ion-item class="item-icon-left item-icon-right" nav-direction="forward" href="#/guide?name=manager">
+				<i class="icon ion-manager"></i>
+				<h2>腾讯手机管家</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

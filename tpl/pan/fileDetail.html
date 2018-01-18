@@ -1,0 +1,153 @@
+<!-- 文件详情 -->
+<ion-view hide-back-button="true" view-title="文件详情">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button ng-click="$ionicGoBack()" class="button back-button buttons button-clear header-item">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<!--<ion-nav-buttons side="right">-->
+		<!--<button class="button buttons button-clear" ng-click="STORAGE.download(resource)">缓存</button>-->
+		<!--<button class="button buttons button-clear" ng-click="STORAGE.checkFile(resource)">获取</button>-->
+		<!--<button class="button buttons button-clear" ng-click="STORAGE.removeFile(resource)">清除</button>-->
+	<!--</ion-nav-buttons>-->
+	<ion-content class="has-header has-footer stable-bg" has-bouncing="true">
+		<ion-refresher on-refresh="onRefresh()"></ion-refresher>
+		<!-- 图片文件 -->
+		<div class="" style="margin: 0;height:100%;">
+			<!-- 文件信息 -->
+			<div class="item item-avatar pan-item">
+				<img style="border-radius:0;" ng-src="{{resource.src}}" img-load-error="img/filetype/image.png">
+				<h2 ng-bind="resource.filename" style="line-height: 20px;white-space: normal;" ></h2>
+				<!-- 分享人信息 -->
+				<div ng-if="shareuser">
+					<p>
+						<span>来自</span>
+						<span ng-bind="shareuser.username" style="color: #4CB8F3;cursor: pointer;" ng-click="operate({type:'showUser',id:shareuser.id})"></span>
+						<span>的分享</span>
+				  	</p>
+				  	<p>
+				  		<span>分享于</span>
+				  		<span ng-bind="shareuser.sharetime"></span>
+				  	</p>
+			  	</div>
+			  	<div ng-if="createUser">
+			  		<p>
+			  			<span>来自</span>
+			  			<span ng-bind="createUser.username" style="color: #4CB8F3;cursor: pointer;" ng-click="operate({type:'showUser',id:createUser.id})"></span>
+			  			<span>的上传</span>
+			  		</p>
+			  	</div>
+				<p ng-if="!shareuser">上传时间：<span ng-bind="resource.createtime" style="font-size: 12px;color: gray;"></span></p>
+				<p>文件大小：<span ng-bind="resource.filesize" style="font-size: 12px;color: gray;"></span></p>
+				<!-- pdf/office -->
+				<p ng-if="(resource.preview == 'office' || resource.preview == 'pdf') && resource.imagenumber>=0">总页数：<span ng-bind="resource.imagenumber" style="font-size: 12px;color: gray;"></span></p>
+				<p ng-if="isApp && $root.localConfig.cacheImage && CACHE.number>0">
+					<span>已缓存：</span>
+					<span >{{CACHE.number}}/<span ng-if="resource.preview == 'image'">1</span><span ng-if="resource.preview == 'office' || resource.preview == 'pdf'">{{resource.imagenumber}}</span></span>
+				</p>
+				<!--媒体资源-->
+				<!--<p ng-if="isApp && (resource.preview == 'video' || resource.preview == 'audio') && (resource.cache || resource.caching)">-->
+					<!--<span>已缓存：</span>-->
+					<!--&lt;!&ndash;缓存中&ndash;&gt;-->
+					<!--<span ng-if="resource.caching">{{resource.caching.loaded|bytesToSize}}/{{resource.caching.total|bytesToSize}}</span>-->
+					<!--&lt;!&ndash;已缓存&ndash;&gt;-->
+					<!--<span>{{resource.cache.size|bytesToSize}}</span>-->
+				<!--</p>-->
+				<!-- 审核 -->
+				<p ng-if="resource.audittime && resource.auditusername">
+					<span>审核人: </span><span ng-bind="resource.auditusername"></span>
+					<span style="margin-left: 3px;">审核时间: </span><span ng-bind="resource.audittime"></span>
+				</p>
+				<!-- 文件位置(只在未审核状态下显示) -->
+				<p ng-if="resource.pathList || isaudit == 1" style="white-space: normal;">
+					<span>文件位置:</span>
+					<span ng-repeat="path in resource.pathList">
+						<span ng-bind="path.name">{{path.name}}</span>
+						<span ng-if="$index < resource.pathList.length-1">/</span>
+					</span>
+				</p>
+				<!-- 浏览计数 -->
+				<div ng-if="resource.preview && resource.readsize" style="position: absolute;bottom: 5px;right: 10px;font-size: 12px;">
+					<span style="color: #fff;background-color: rgba(128, 128, 128, 0.5);padding: 0 4px;border-top-left-radius: 6px;margin-right: -5px;">浏览</span>
+					<span ng-bind="resource.readsize" style="background-color: rgba(128, 128, 128, 0.6);color: #fff;padding-left: 6px;padding-right: 8px;;border-bottom-right-radius: 6px;"></span>
+				</div>
+			</div>
+			<!-- image/office/pdf -->
+			<div ng-if="resource.preview == 'image' || resource.imagenumber>0" class="item stable-bg" style="padding: 5px;text-align: center;">
+				<img ng-if="resource.photo" ng-src="{{resource.photo}}" img-load-error="img/exception/preview-error.png" ng-click="operate({type: 'preview'})" style="max-width: 100%;max-height: 300px;cursor: pointer;">
+			</div>
+			<!-- office/pdf转换中 -->
+			<div ng-if="resource.imagenumber < 1 && (resource.preview == 'office' || resource.preview == 'pdf')" style="text-align: center;padding: 20px;">
+				<p ng-if="resource.imagenumber == 0" class="calm">文件还没转换好<br/>先去看看其它的吧</p>
+				<h4 ng-if="resource.imagenumber == -1" class="assertive"><i class="ion-alert-circled"></i>文件转换失败</h4>
+			</div>
+			<!-- zlt文件 -->
+			<div ng-if="resource.preview == 'zlt'" class="item item-image">
+				<img ng-src="{{resource.src}}" style="width: 100px;margin: 10px 0;" ng-click="editFile(resource)">
+				<h2 class="calm" style="font-size: 12px;">点击文件进行编辑</h2>
+				<br/>
+			</div>
+			<!--video/audio媒体-->
+			<media-player ng-if="media" source="media" request-play="requestPlay"></media-player>
+			<!--txt-->
+			<div ng-if="resource.preview == 'txt'" ng-click="operate({type: 'previewText'})" style="margin: 5px 20px;padding: 20px;background: #fff;cursor: pointer;">
+				<p ng-bind="txtContent" style="white-space: pre-line;overflow: hidden;height: 360px;line-height: 30px;color: #555;"></p>
+			</div>
+			<!-- 非预览 -->
+			<div ng-if="!resource.preview" class="item item-image">
+				<img ng-src="{{resource.src}}" style="width: 100px;margin: 10px 0;">
+				<h2 style="color: gray;font-size: 12px;">暂时无法打开该类型文件</h2>
+				<br/>
+			</div>
+		</div>
+	</ion-content>
+	<!-- 不需要审核 或者 没有审核权限 -->
+	<ion-footer-bar ng-if="!isaudit || (isaudit && competence == 0)" class="mfblue hx-flex-justify-content" style="padding:0;padding-top: 2px;color: #fff;">
+			<a ng-if="competence == 1 || resource.userid == $root.USER.id" class="tab-item" style="opacity: 1;" ng-click="operate({type: 'rename'})">
+				<i class="icon ion-ios-compose-outline" style="height: 20px;font-size: 16px;"></i>
+				<span class="tab-title" style="font-size: 12px;">重命名</span>
+			</a>
+			<a ng-if="competence == 1 || resource.userid == $root.USER.id" class="tab-item" style="opacity: 1;" ng-click="operate({type: 'moveResource'})">
+				<i class="icon ion-android-bicycle" style="height: 20px;font-size: 20px;"></i>
+				<span class="tab-title" style="font-size: 12px;">移动</span>
+			</a>
+			<a class="tab-item" style="opacity: 1;" ng-click="operate({type: 'download'})">
+				<i class="icon ion-ios-cloud-download" style="height: 20px;font-size: 20px;"></i>
+				<span class="tab-title" style="font-size: 12px;">下载</span>
+			</a>
+			<a ng-if="isApp && $root.localConfig.cacheImage && (resource.preview == 'image' || resource.preview == 'pdf' || resource.preview == 'office') && !CACHE.isCached" class="tab-item" style="opacity: 1;" ng-click="CACHE.cache()">
+				<i class="icon ion-archive" style="height: 20px;font-size: 20px;"></i>
+				<span class="tab-title" style="font-size: 12px;">缓存</span>
+			</a>
+			<a ng-if="isApp && $root.localConfig.cacheImage && (resource.preview == 'image' || resource.preview == 'pdf' || resource.preview == 'office') && CACHE.isCached" class="tab-item" style="opacity: 1;" ng-click="CACHE.clear()">
+				<i class="icon ion-ios-filing-outline" style="height: 20px;font-size: 20px;"></i>
+				<span class="tab-title" style="font-size: 12px;">清缓存</span>
+			</a>
+			<a class="tab-item" style="opacity: 1;" ng-click="operate({type: 'share'})">
+				<i class="icon ion-share" style="height: 20px;font-size: 20px;"></i>
+				<span class="tab-title" style="font-size: 12px;">分享</span>
+			</a>
+			<a ng-if="competence == 1 || resource.userid == $root.USER.id" class="tab-item" style="opacity: 1;" ng-click="operate({type: 'deleteResource'})">
+				<i class="icon ion-ios-trash" style="height: 20px;font-size: 20px;"></i>
+				<span class="tab-title" style="font-size: 12px;">删除</span>
+			</a>
+			<a ng-if="competence == 1 || resource.userid == $root.USER.id" class="tab-item" style="opacity: 1;" ng-click="operate({type: 'copyResource'})">
+				<i class="icon ion-ios-copy-outline" style="height: 20px;font-size: 16px;"></i>
+				<span class="tab-title" style="font-size: 12px;">复制</span>
+			</a>
+	</ion-footer-bar>
+	<!-- 审批: 未审批,并且有权限-->
+	<div ng-if="isaudit == 1 && competence == 1" class="bar bar-footer mfblue hx-flex-justify-content" style="padding:0;padding-top: 2px;color: #fff;">
+		<a class="tab-item" style="opacity: 1;" ng-click="auditFile('refuse')">
+			<i class="icon ion-android-close" style="height: 20px;font-size: 20px;"></i>
+			<span class="tab-title" style="font-size: 12px;">拒绝</span>
+		</a>
+		 <a class="tab-item" style="opacity: 1;" ng-click="auditFile('pass')">
+			<i class="icon ion-android-done" style="height: 20px;font-size: 20px;"></i>
+			<span class="tab-title" style="font-size: 12px;">审批通过</span>
+		</a>
+	</div>
+</ion-view>

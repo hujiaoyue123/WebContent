@@ -1,0 +1,93 @@
+<!-- 联系人 -->
+<ion-view view-title="联系人">
+	<!-- 右侧功能菜单 -->
+	<ion-nav-buttons side="right">
+		<label class="button button-clear button-light" ng-click="operate({action:'topMenu'},$event)">
+			<i class="icon ion-android-menu" style="width:20px;"></i>
+		</label>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-refresher on-refresh="CONTACT.getUserByDeptId()"></ion-refresher>
+		<!-- 搜索 -->
+		<search-bar placeholder="搜索用户" ng-click="operate({action: 'search'})"></search-bar>
+		<ion-list class="contact-list">
+	        <!-- 企业 -->
+			<ion-item ng-if="$root.USER.orguser == '1'" ng-repeat="org in contact.orgs" class="item item-avatar item-icon-right"
+				 ng-click="enterOrgMember(org)"><!-- enterOrgDetailPage(org) -->
+				<img ng-src="{{org.avatar}}" img-load-error="img/icon/org.png" style="top:11px;border-radius: 0px;">
+				<h2>
+					<span ng-bind="org.name"></span>
+					<i ng-if="false" class="ion-ribbon-b energized" style="margin-left:5px;"></i>
+				</h2>
+				<img ng-src="img/icon/{{org.orglevel == 1 ? 'auth' : 'noauth'}}.png" style="max-width: 55px;">
+				<i class="icon ion-ios-arrow-right icon-accessory" style="right: 3px;color:#ccc;font-size:16px;"></i>
+			</ion-item>
+			<!-- 未加入企业 -->
+			<ion-item ng-if="$root.USER.orguser == '0'" class="item item-avatar item-icon-right" 
+				  ng-click="operate({action:'neworg'},$event)">
+				<img style="top:11px;" ng-src="{{$root.CONFIG.defaultOrgPhoto}}">
+				<h2>尚未加入任何企业</h2>
+				<p>点击成为企业用户</p>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<!-- 群组 -->
+			<ion-item class="item-icon-left item-icon-right contact-icon" ng-click="enterGroupPage()">
+				<i class="icon ion-android-contacts energized"></i>
+				<h2>群组</h2>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<!-- 新联系人 -->
+			<ion-item class="item-icon-left item-icon-right" ng-click="operate({action:'clickNewContact'})">
+				<i class="icon ion-person-add calm" ></i>
+				<!--  div ng-if="0" style="position:absolute;top:2px;left:40px;line-height:20px;background-color:#ef473a;color:#fff;padding:0 8px;border-radius:12px;font-size:12px;">
+					<span ng-if="0" ng-bind="1"></span>
+				</div --> 
+				<h2>新联系人</h2>
+				<span ng-if="$root.newInvite>0" class="badge badge-assertive" ng-bind="$root.newInvite"></span>
+				<i class="icon ion-ios-arrow-right icon-accessory"></i>
+			</ion-item>
+			<!-- 常用联系人-->
+			<ion-item ng-if="contact.users.length>0" class="item-driver" style="padding-top:5px;padding-bottom:5px; background-color:#f5f5f5;">
+				<h2 style="font-size: 14px;">常用联系人</h2>
+			</ion-item>
+			<!-- mobile展示方式 -->
+			<div ng-if="!isHD">
+				<ion-item ng-repeat="usr in contact.users" class="item item-icon-left item-icon-right item-user"
+						 ng-click="operate({action:'clickuser',userid:usr.id},$event)" ng-style="{'border-top-width': $index==0?'0':'1px'}">
+					<i class="icon"><img ng-src="{{usr.avatar}}" img-load-error="img/exception/user-error.png"></i>
+					<h2 style="line-height:20px;">{{usr.username}}</h2>
+					<ion-option-button class="button-positive" ng-click="operate({action:'sendMsg',usr:usr,$event: $event})" >发送<br/>消息</ion-option-button>
+					<ion-option-button class="button-balanced" ng-click="callphone({phoneNo:usr.loginname,$event: $event})" >拨打<br/>电话</ion-option-button>
+					<ion-option-button class="button-assertive" ng-click="operate({action:'deleteFriend',friend: usr},$event)">删除<br/>好友</ion-option-button>
+					<i class="icon ion-ios-arrow-right icon-accessory" style="right: 3px;font-size:16px;"></i>
+				</ion-item>
+			</div>
+			<!-- HD展示方式 -->
+			<div ng-if="isHD">
+				<ion-item ng-repeat="usr in contact.users" class="user-item item-hd"
+						 ng-click="operate({action:'clickuser',userid:usr.id},$event)" ng-style="{'height': usr.showTool ? '106px' : '54px'}">
+					<img ng-src="{{usr.avatar}}" img-load-error="img/exception/user-error.png">
+					<h2>{{usr.username}}</h2>
+					<!-- 下拉按钮 -->
+					<i ng-if="$root.CONFIG.internet" class="item-right-icon dropButton" ng-click="operate({action: 'toolMenu',friend: usr,$event: $event})">
+						<i ng-if="!usr.showTool" class="icon ion-ios-arrow-down"></i>
+						<i ng-if="usr.showTool" class="icon ion-ios-arrow-up"></i>
+					</i>
+					<!-- 菜单栏 -->
+					<div ng-if="usr.showTool" class="row hx-flex-justify-content" ng-click="operate({$event: $event})">
+						<a class="col" ng-click="operate({action:'sendMsg',usr:usr,$event: $event})" >
+							<i class="ion-chatbox"></i>
+							<span>发送消息</span>
+						</a>
+						<a class="col red-color" ng-click="operate({action:'deleteFriend',friend: usr,$event: $event})">
+							<i class="ion-ios-trash"></i>
+							<span>删除好友</span>
+						</a>				
+					</div>
+				</ion-item>
+			</div>
+		</ion-list>
+		<!-- 上拉刷新 -->
+		<ion-infinite-scroll ng-if="pageConfig.contact.hasMore" on-infinite="CONTACT.pagingForGetUserByDeptId()" distance="10%"></ion-infinite-scroll>
+	</ion-content>
+</ion-view>

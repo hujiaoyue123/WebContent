@@ -1,0 +1,29 @@
+<!-- 掌秀设置 -->
+<ion-view hide-back-button="true" view-title="操作提示 ">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button class="button back-button buttons button-clear header-item" ng-click="jumpToScan()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<!-- 中央 -->
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-list>
+			<ion-item class="item-divider item-text-wrap">
+				<p>掌秀正在进行网络连接，请查看待机画面右上角，第三应显示您要连接的网络名称，如果第二行ip地址显示完整，说明已连接成功。请进入手机的系统设置，将手机的无线网络连接到第三行显示的名称上。
+			</ion-item>
+			<div style="text-align:center;">
+				<img src="img/about/zxtip2.png" style="max-width: 100%;width: 60%;"/>
+			</div>
+			<div  style="padding: 12px 0;" >
+				<p>设置连接的无线网络为:<strong>{{dev.dspName}}</strong><br/>手机当前连接的网络为:<strong>{{dev.newName}}</strong></p>
+			</div>
+			<div style="padding: 12px 0;" class="flex-box">
+   				<button class="button button-calm button-block" style="border-radius: 40px;margin: 0 5px;" ng-click="gotowifi()" >去设置</button>
+             	<button class="button button-positive button-block" style="border-radius: 40px;margin: 0 5px;" ng-click="jumpToScan()" >已设置</button>
+         	</div>
+		</ion-list>
+	</ion-content>
+</ion-view>

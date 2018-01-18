@@ -1,0 +1,229 @@
+ <!-- 消息 -->
+<ion-view hide-back-button="true" view-title="{{toUserName}}">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button ng-click="chatback()" class="button back-button buttons  button-clear header-item">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i> 
+		</button>
+	</ion-nav-buttons>
+	<ion-nav-buttons side="right">
+		<!-- 文件库 -->
+		<label ng-if="isNotSysMsg" class="button button-clear button-light" ng-click="operate({action:'openFolder'},$event)">
+			<i class="icon ion-ios-folder-outline"></i>
+		</label>
+		<!-- 群组详情 -->
+		<label ng-if="isNotSysMsg" class="button button-clear button-light" ng-click="operate({action:'topMenu'},$event)">
+			<i ng-class="{'icon ion-person-add': !isGroup,'icon ion-android-contacts': isGroup}"></i>
+		</label>
+	</ion-nav-buttons>
+	<ion-content has-bouncing="true" class="has-header has-footer stable-bg" ng-click="clickContent()" delegate-handle="userMessageScroll" ng-class="{'toolsClose':!peerOk,'content-toolsopen':toolsOpened,'content-toolsclose':(toolsClosed && peerOk)}">
+    	<ion-refresher ng-if="isApp" on-refresh="operate({action:'refresh'},$event)"></ion-refresher>
+    	<div ng-repeat="message in messages" class="message-wrapper">
+	        <div ng-if="message.moment" class="chat-moment"><div ng-bind="getCt(message.moment)"></div></div>
+	        <div ng-if="message.moment" class="chat-clear"></div>
+	        <div ng-if="message.notice" class="chat-moment"><span style="background-color: #ddd;border-radius: 5px;padding: 3px 10px;"
+	        	 ng-bind="message.data"></span></div>
+	        <div ng-if="message.notice" class="chat-clear"></div>
+	        <!-- 对方 -->
+	        <div ng-if="user.id !== message.from && !message.notice" style="position:relative;"  ng-class="{'pic':'chat-picture','zwfile':'chat-template','auditfile':'chat-template','url':'chat-template'}[message.msgType]">
+				<!-- 个人头像 -->
+				<img ng-click="showUserDetail(message)" class="profile-pic left" ng-src="{{message.user.avatar}}" img-load-error="img/exception/user-error.png"
+					on-hold="onUserHold($event, $index, message)" style="top: 5px;cursor: pointer;"/>
+				<!-- 用户名-只多人显示 -->
+				<div ng-if="$stateParams.type == 'groupchat'" ng-bind="message.user.name" class="ellipsis line-clamp-1" style="margin-left: 65px;max-width: 200px;font-size: 12px;color: #b2b2b2;"></div>
+				<div class="chat-bubble left"  on-hold="onMessageHold($event, $index, message)" ng-click="handleMessage(message)" style="padding: 8px 10px;margin-top: 5px;cursor: pointer;">
+					<!-- 文本 -->
+	                <div ng-if="message.msgType == 'txt'" class="message">
+	                	<span ng-if="message.body" ng-repeat="b in message.body">
+	                		<span ng-if="b.type=='txt'" ng-bind="b.data | nl2br" autolinker></span>
+	                		<img class="chat-emotion" ng-if="b.type=='emotion'" ng-src="{{b.data.data}}" />
+	                	</span>
+	                	<span ng-if="!message.body" ng-bind-html="message.data  | nl2br" autolinker></span>
+	                </div>
+				   	<!-- 文件 -->
+	                <div ng-if="message.msgType=='zwfile'" class="message" ng-click="operate({action:'clickZwfile',data:message.ext.ext})">
+                    	<div class="msg-title" ng-bind="message.ext.ext.filename"> </div>
+                    	<div class="msg-content">
+                    	<div class="msg-icon"><img ng-src="{{message.ext.ext.icon}}" /></div>
+                    	<div ng-if="!message.ext.ext.desc" class="msg-detail">{{message.name}} 分享的文件</div>
+                    	<div ng-if="message.ext.ext.desc"class="msg-detail">{{message.ext.ext.desc}}</div>
+                    	<div style="clear:left;"></div>
+                    	</div>
+                    </div>
+                    <!-- 审核文件、文件夹 -->
+                    <div ng-if="message.msgType=='auditfile'" class="message" ng-click="operate({action:'clickAuditfile',data:message.ext.ext})" style="cursor: pointer;color: #383737;">
+	                   	<div class="msg-title" ng-bind="message.ext.ext.filename"> </div>
+	                   	<div class="msg-content">
+	                   		<div style="float: left;width: 64px;height: 64px;text-align: center;"><img ng-src="{{message.ext.ext.icon}}" style="max-height: 100%;max-width: 100%;"/></div>
+	                   		<div ng-class="{'file-audit-refuse' : message.ext.ext.isaudit == -1,'file-audit-pass' : message.ext.ext.isaudit == 0}"></div>
+	                   	</div>
+                    </div>
+				   	<!-- url-->
+	                <div ng-if="message.msgType=='url'" class="message" ng-click="operate({action:'clickUrl',data:message.ext.ext})">
+                    	<div class="msg-title" ng-bind="message.ext.ext.title"> </div>
+                    	<div class="msg-content">
+                    	<div class="msg-icon"><img ng-src="{{message.ext.ext.img?message.ext.ext.img:defaultLinkPic}}" /></div>
+                    	<div class="msg-detail">{{message.ext.ext.digest}}</div>
+                    	<div style="clear:left;"></div>
+                    	</div>
+                    </div>
+                    <!-- 图片 -->
+	                <div ng-if="message.msgType=='pic'">
+                    	<div class="msg-icon msg-pic"><img ng-src="{{message.filePath}}" 
+                    	ng-click="operate({action:'clickImg',data:message,event:$event})" img-load-error="img/exception/preview-error.png"/></div>
+                    </div>
+                    <!-- 语音 -->
+                    <div ng-if="message.msgType == 'voice'" class="message" style="cursor: pointer;" ng-style="{width: message.length ? (30+ message.length*2+'px') : '30px'}">
+                    	<!-- 未读语音标记 -->
+                    	<div ng-if="!message.isListened" style="position: absolute;top: 14px;right: -45px;background-color: #e9473a;width: 10px;height: 10px;border-radius: 50%;"></div>
+                    	<!-- 语音长度 -->
+                    	<div ng-if="message.length" style="position: absolute;top: 10px;right: -26px;color: rgba(0, 0, 0, 0.5);font-weight: 600;">{{message.length}}"</div>
+                    	<!-- 播放音频变化 -->
+                    	<div style="background-image: url(img/media/voice-l-{{message.playStatus? message.playStatus : 0}}.png);width: 16px;height: 16px;background-repeat: no-repeat;background-size: contain;"></div>
+                    </div>
+				</div>
+	        </div>
+	        <!-- 自己 -->
+	        <div ng-if="user.id === message.from" style="position:relative;" ng-class="{'pic':'chat-picture','zwfile':'chat-template','auditfile':'chat-template','url':'chat-template'}[message.msgType]">
+	            <!-- 个人头像 -->
+	            <img ng-click="showUserDetail(message)" class="profile-pic right" ng-src="{{user.photo}}" img-load-error="img/exception/user-error.png" style="top: 5px;cursor: pointer;"/>
+	            <div class="chat-bubble right" on-hold="onMessageHold($event, $index, message)" ng-click="handleMessage(message)" style="padding: 8px 10px;margin-top: 5px;cursor: pointer;">
+	            	<!-- 文本 -->
+	                <!--  <div ng-if="message.msgType == 'txt'" class="message" ng-bind-html="message.data | nl2br" autolinker> -->
+	                <div ng-if="message.msgType == 'txt'" class="message">
+	                	<span ng-if="message.body" ng-repeat="b in message.body">
+	                		<span ng-if="b.type=='txt'" ng-bind-html="b.data | nl2br" autolinker></span>
+	                		<img class="chat-emotion" ng-if="b.type=='emotion'" ng-src="{{b.data.data}}" />
+	                	</span>
+	                	<span ng-if="!message.body" ng-bind-html="message.data  | nl2br" autolinker></span>
+	                </div>
+	                <!-- 文件 -->
+	                <div ng-if="message.msgType=='zwfile'" class="message" ng-click="operate({action:'clickZwfile',data:message.ext.ext})">
+                    	<div class="msg-title" ng-bind="message.ext.ext.filename"> </div>
+                    	<div class="msg-content">
+                    	<div class="msg-icon"><img ng-src="{{message.ext.ext.icon}}" /></div>
+                    	<div class="msg-detail" >您分享的文件</div>
+                    	</div>
+                    </div>
+                    <!-- 审核文件、文件夹 -->
+                    <div ng-if="message.msgType=='auditfile'" class="message" ng-click="operate({action:'clickAuditfile',data:message.ext.ext})" style="cursor: pointer;color: #383737;">
+	                   	<div class="msg-title" ng-bind="message.ext.ext.filename"> </div>
+	                   	<div class="msg-content">
+	                   		<div style="float: left;width: 64px;height: 64px;text-align: center;"><img ng-src="{{message.ext.ext.icon}}" style="max-height: 100%;max-width: 100%;"/></div>
+	                   		<div ng-class="{'file-audit-refuse' : message.ext.ext.isaudit == -1,'file-audit-pass' : message.ext.ext.isaudit == 0}"></div>
+	                   	</div>
+                    </div>
+				   	<!-- url-->
+	                <div ng-if="message.msgType=='url'" class="message" ng-click="operate({action:'clickUrl',data:message.ext.ext})">
+                    	<div class="msg-title" ng-bind="message.ext.ext.title"> </div>
+                    	<div class="msg-content">
+                    	<div class="msg-icon"><img ng-src="{{message.ext.ext.img?message.ext.ext.img:defaultLinkPic}}" /></div>
+                    	<div class="msg-detail">{{message.ext.ext.digest}}</div>
+                    	</div>
+                    </div>
+                    <!-- 图片 -->
+	                <div ng-if="message.msgType=='pic'">
+                    	<div class="msg-icon msg-pic"><img ng-src="{{message.filePath}}" 
+                    	ng-click="operate({action:'clickImg',data:message,event:$event})" img-load-error="img/exception/preview-error.png"/></div>
+                    </div>
+                    <!-- 语音 -->
+                    <div ng-if="message.msgType == 'voice'" class="message" style="cursor: pointer;" ng-style="{width: message.length ? (30+ message.length*2+'px') : '30px'}">
+                    	<!-- 语音长度 -->
+                    	<div ng-if="message.length" style="position: absolute;top: 10px;left: -22px;color: rgba(0, 0, 0, 0.5);font-weight: 600;">{{message.length}}"</div>
+                    	<!-- 播放音频变化 -->
+                    	<div style="background-image: url(img/media/voice-r-{{message.playStatus? message.playStatus : 0}}.png);width: 16px;height: 16px;float: right;background-repeat: no-repeat;background-size: contain;"></div>
+                    </div>
+	            </div>
+	        </div>
+	        <div class="chat-clear"></div>
+        </div>
+        
+     </ion-content>
+     <form ng-show="peerOk" name="sendMessageForm" ng-submit="sendMessage(sendMessageForm)" novalidate>
+         <ion-footer-bar scope-field="footerBar" id="chat_footer" class="bar-light item-input-inset message-footer" keyboard-attach="true" ng-class="{true:'toolsOpen',false:'toolsClose'}[toolsOpen()]">
+            <!-- 语音按钮 -->
+            <label ng-if="isApp" ng-click="toggleVoice()" style="position: absolute;width: 50px;top: 0;left: 0;height: 100%;">
+            	<div class="voice-btn mf-blue-color" ng-class="{'rotate-45': !readySpeak}" style="margin: 7px auto;">
+            		<!-- <i ng-class="readySpeak ? 'ion-ios-keypad' : 'ion-social-rss'"></i> -->
+            		<i ng-show="readySpeak" class="ion-ios-keypad"></i>
+            		<i ng-show="!readySpeak" class="ion-social-rss"></i>
+            	</div>
+            </label>
+            <!-- 中间区域 -->
+			<div style="width: 100%;text-align: center;" ng-style="{'margin-right': readySpeak ? '40px' : '80px','margin-left': isApp ? '40px': 0}">
+				<!-- 点击说话  -->
+				<button class="button button-calm mfblue" ng-show="readySpeak" on-drag-up="onDragUp()" on-drag-down="onDragDown()" on-touch="startSpeak = true;startRecorde()" on-release="startSpeak = false;stopRecorde()"  style="width: 90%;">
+					<span ng-show="!startSpeak">按住 说话</span>
+					<span ng-show="startSpeak">松开 结束</span>
+				</button>
+				<!-- 文本框 -->
+				<label scope-field="taWrap" class="item-input-wrapper" ng-hide="readySpeak">
+				    <textarea scope-field="txtInput" class="chat-input" 
+				    style="max-height:84px;min-height:36px;padding-top:10px;" ng-model="input.message" required minlength="1" maxlength="1500" msd-elastic></textarea>
+				</label>
+            </div>
+             <!-- 表情和工具 -->
+            <div class="flex-box" style="position: absolute;top: 0;right: 0;height: 100%;" ng-style="{width: readySpeak ? '40px' : '80px'}">
+             	<!-- 表情 -->
+				<i ng-hide="readySpeak" class="icon zwicon icon-emotion-1 flex-auto mf-blue-color" ng-click="taggleTools('emotion')" style="font-size:26px;line-height: 44px;"></i>
+				<!-- 工具 -->
+				<i class="icon ion-ios-plus-outline flex-auto mf-blue-color" ng-click="taggleTools('tool')" ng-show="readySpeak || !input.message || input.message == ''" style="font-size: 32px;line-height: 44px;"></i>
+				<!-- 发送 -->
+				<button class="button button-balanced flex-auto" style="margin: 6px 3px;padding: 0 6px;" type="submit" ng-hide="readySpeak || !input.message || input.message==''" ng-disabled="!toUser || !peerOk">发送</button>
+            </div>
+         </ion-footer-bar>
+         <!-- 表情 -->
+         <ion-footer-bar ng-if="showTools.emotion" style="height:125px;">
+         	<div class="chat-emotion-wrap">
+         		<ul>
+         			<li ng-repeat="em in emotionPicData">
+         				<img class="chat-emotion" ng-src="{{em.data}}"  ng-click="operate({action:'clickEmotion',em:em})" />
+         			</li>
+         		</ul>
+         	</div>
+         </ion-footer-bar>
+          <!-- 工具栏 -->
+         <ion-footer-bar ng-if="showTools.tool" style="height:125px;border-top:1px solid #DDDDDD;padding-top:20px;padding-bottom:10px;">
+         	<div class="row hx-flex-justify-content">
+         	<!-- 图片 -->
+         	<div id="chat_selectPhoto" ng-if="isWeb" class="col" style="text-align:center;cursor: pointer;" ngf-select="operate({action:'webphoto',files:$files})" ngf-pattern="'image/*'">
+         		<div>
+         			<div  style="font-size:32px;width:50px;height:50px;line-height:50px;border:1px solid #B5B0B0;border-radius:7px;margin:auto;color:gray;">
+         				<i class="icon ion-android-image"></i>
+         			</div>
+         			<div style="color:gray;padding: 5px;">图片</div>
+         		</div>
+         	</div>
+         	<div ng-if="!isWeb" class="col" style="text-align:center;cursor: pointer;" ng-click="operate({action:'photo'})">
+         		<div>
+         			<div  style="font-size:32px;width:50px;height:50px;line-height:50px;border:1px solid #B5B0B0;border-radius:7px;margin:auto;color:gray;">
+         				<i class="icon ion-android-image"></i>
+         			</div>
+         			<div style="color:gray;padding: 5px;">图片</div>
+         		</div>
+         	</div>
+         	<!-- 相机 -->
+         	<div ng-if="!isWeb" class="col" style="text-align:center;cursor: pointer;" ng-click="operate({action:'camera'})">
+         		<div>
+         			<div  style="font-size:32px;width:50px;height:50px;line-height:50px;border:1px solid #B5B0B0;border-radius:7px;margin:auto;color:gray;">
+         				<i class="icon ion-camera"></i>
+         			</div>
+         			<div style="color:gray;padding: 5px;">相机</div>
+         		</div>
+         	</div>
+         	<!-- 文件 -->
+         	<div class="col" style="text-align:center;cursor: pointer;" ng-click="operate({action:'zwfile'})">
+         		<div>
+         			<div  style="font-size:32px;width:50px;height:50px;line-height:50px;border:1px solid #B5B0B0;border-radius:7px;margin:auto;color:gray;">
+         				<i class="icon ion-document-text"></i>
+         			</div>
+         			<div style="color:gray;padding: 5px;">文件</div>
+         		</div>
+         	</div>
+         </div>
+         </ion-footer-bar>
+     </form>
+ </ion-view>
+

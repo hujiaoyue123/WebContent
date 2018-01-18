@@ -1,0 +1,25 @@
+<!-- 帮助与反馈-->
+<ion-view view-title="{{title || '帮助与反馈'}}">
+	<ion-nav-buttons side="left">
+		<button class="button back-button buttons button-clear header-item" ng-click="$ionicGoBack()">
+			<i class="icon ion-ios-arrow-back"></i>
+		</button>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<!-- 搜索 -->
+		<div class="item search-bar item-input-inset">
+			<ion-search placeholder="搜索" filter="search"></ion-search>
+		</div>
+		<ion-list>
+			<ion-item class="item-avatar" ng-repeat="folder in resource.folders" ng-click="operate({type: 'clickFolder',folder: folder})">
+				<img style="border-radius:0;width:auto;height:auto;" src="img/filetype/folder.png">
+				<h2 style="line-height:20px;" ng-bind="folder.name"></h2>
+				<p ng-bind="folder.updatetime"></p>
+			</ion-item>
+			<ion-item class="item-avatar" ng-repeat="res in resource.resources" ng-click="operate({type: 'clickResource',resource: res})">
+				<img style="border-radius:0;width:auto;height:auto;" ng-src="{{res.src}}">
+				<h2 ng-bind="res.filename" style="line-height:20px;"></h2>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

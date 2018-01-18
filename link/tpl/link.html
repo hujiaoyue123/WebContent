@@ -1,0 +1,95 @@
+<ion-view>
+	<!-- 顶部 -->
+	<ion-header-bar class="mfblue" align-title="left">
+		<div style="width:33px;cursor:pointer;margin-left:8px;" ng-click="goHome()">
+			<img style="width:33px;" src="../img/logo-p.png">
+		</div>
+		<h2 class="title">掌文</h2>
+	</ion-header-bar>
+	<!-- 中央 -->
+	<ion-content class="stable-bg" has-bouncing="true">
+		<div ng-if="!exception" class="list" style="margin-bottom: 0;">
+			<!-- 文件信息 -->
+			<div class="item item-avatar pan-item">
+				<img style="border-radius:0;" ng-src="{{resource.src}}">
+				<h2 ng-bind="resource.filename" style="line-height: 20px;white-space: normal;" ></h2>
+				<!-- 分享人信息 -->
+				<div ng-if="user">
+					<p>
+						<span>来自</span>
+						<span ng-bind="user.username" style="color: #4CB8F3;cursor: pointer;" ng-click="operate({type:'showUser',id:shareuser.id})"></span>
+						<span>的分享</span>
+				  	</p>
+				  	<p>
+				  		<span>分享于</span>
+				  		<span ng-bind="share.createtime"></span>
+				  	</p>
+			  	</div>
+				<p>文件大小：<span ng-bind="resource.filesize" style="font-size: 12px;color: gray;"></span></p>
+				<!-- pdf/office -->
+				<p ng-if="resource.preview == 'office' || resource.preview == 'pdf'">总页数：<span ng-bind="resource.imagenumber" style="font-size: 12px;color: gray;"></span></p>
+			</div>
+			<!-- image/office/pdf -->
+			<div ng-if="resource.preview == 'image' || resource.imagenumber>0" class="item item-image stable-bg" style="padding: 5px;">
+				<div ng-show="resource.photo" ng-click="preview()" style="width: 40px;height: 40px;line-height: 40px;position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -20px;background-color: #000;border-radius: 50%;color: #fff;cursor: pointer;opacity: 0.6;">
+					<i class="icon ion-ios-eye-outline" style="font-size: 38px;margin: auto;color: #fafafa;"></i>
+				</div>
+				<img ng-if="resource.photo" ng-src="{{resource.photo}}" style="max-width: 100%;max-height: 300px;">
+			</div>
+			<!--txt-->
+			<div ng-if="resource.preview == 'txt'" ng-click="previewText()" style="margin: 5px 20px;padding: 20px;background: #fff;cursor: pointer;">
+				<p ng-bind="txtContent" style="white-space: pre-line;overflow: hidden;height: 360px;line-height: 30px;color: #555;"></p>
+			</div>
+			<!--audio/video-->
+			<media-player ng-if="media" source="media"></media-player>
+			<!-- 非预览 -->
+			<div ng-if="!resource.preview" class="item item-image">
+				<img ng-src="{{resource.src}}" style="width: 100px;margin: 10px 0;">
+				<h2 style="color: gray;font-size: 12px;">暂时无法打开该类型文件</h2>
+				<br/>
+			</div>
+			<!-- 功能按钮: 下载/app打开 -->
+			<div class="row item justify-content-center">
+				<button ng-click="$root.share.download(share.id)" class="col button button-small button-outline button-balanced" style="margin: 0 5px;max-width: 300px;">下载文件</button>
+				<button ng-if="isMobileBrower" ng-click="openApp()" class="col button button-small button-outline button-calm" style="margin: 0 5px;max-width: 300px;">掌文打开</button>
+			</div>
+			<!-- 微信特殊提醒 
+			<ion-item ng-if="!isWeiXin()" >
+				<p style="font-size: 12px;white-space: initial;">
+				如果已安装掌文,并且期望在掌文中打开该文件,请点击右上角菜单,浏览器中打开.</p>
+			</ion-item>-->
+			<!-- 下载app -->
+			<ion-item class="item" ng-if="showDownload">
+				<p style="font-size: 12px;">如果未安装掌文应用,请下载安装</p>
+				<button class="button button-balanced button-small" style="position: absolute;top: 12px;right: 16px;" ng-click="downApp()">点击下载</button>
+			</ion-item>
+		</div>
+		<!-- 异常 -->
+		<div ng-if="exception" class="card" style="margin-top:30px;">
+			<div class="item" style="text-align:center;color:#ddd;">
+				<h2 style="font-size:17px;"><i class="icon ion-alert-circled assertive" style="font-size:22px;"></i> {{exceptionResult}}</h2>
+			</div>
+		</div>
+		<!-- 介绍 -->
+		<ion-item class="stable-bg" style="border-bottom: 0;">
+			<!-- pc显示 -->
+			<div ng-if="!isMobileBrower" class="qrcode-position">
+				<div class="qrcode-circle" qrcode-animation style="cursor: pointer;">
+					<img src="img/qrcode.png" ng-style="{'width': size + 'px','height': size + 'px'}"/>
+				</div>
+				<p>掌文App</p>
+			</div>
+			<!-- 公司版权名称 -->
+			<div class="copyright">
+				<p>微掌文公司 版权所有</p>
+				<p>Copyright ©2016 微掌文科技(北京)有限公司</p>
+			</div>
+		</ion-item>
+	</ion-content>
+	<!-- 加载 -->
+	<div ng-show="showTip" ng-click="showTip = false" class="openInBrower">
+		<div class="openTip">
+			<img src="img/tip.png"/>
+		</div>
+	</div>
+</ion-view>

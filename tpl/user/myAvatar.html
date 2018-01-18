@@ -1,0 +1,14 @@
+<!-- 个人头像 -->
+<ion-view view-title="个人头像">
+	<!-- 右侧按钮 -->
+	<ion-nav-buttons side="right">
+		<button class="button button-clear" ng-click="showActionSheet()">
+			<i class="icon ion-ios-more"></i>
+		</button>
+	</ion-nav-buttons>
+	<ion-content class="preview-scroll" scroll="false" style="background-color: #000;">
+		<ion-scroll direction="xy" zooming="true" min-zoom="1" has-bouncing="true" style="height: 100%;width: 100%;overflow-x: hidden;overflow-y: hidden;">
+			<div class="preview-image" ng-style="{'background-image': 'url(' + user.previewPhoto+')'}" on-hold="onHoldActionSheet()"></div>
+		</ion-scroll>
+	</ion-content>
+</ion-view>

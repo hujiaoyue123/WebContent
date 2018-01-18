@@ -1,0 +1,35 @@
+<!-- 群组 -->
+<ion-view hide-back-button="true" view-title="群组">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button ng-click="$ionicGoBack()" class="button back-button buttons button-clear header-item">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<ion-nav-buttons side="right">
+		<label class="button button-clear button-light" ng-click="beforeAddGroup()">
+			<i class="icon ion-android-add" style="width:20px;"></i>
+		</label>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-refresher on-refresh="getGroups()"></ion-refresher>
+		<!-- 没有任何群组 -->
+		<div ng-if="groups.length == 0" style="text-align: center;padding-top: 20px;font-size: 16px;color: #ddd;">您尚未加入任何群组</div>
+		<!-- 群组列表 -->
+		<ion-list class="contact-list">
+			<ion-item ng-repeat="group in groups" class="item-icon-left item-icon-right" ng-click="enterChatPage(group)">
+				<div ng-if="group.photos.length>1 && !group.photo" class="hx-group-avatar">
+					<div ng-if="group.photos.length == 3" style="width:10px;height:1px; float:left;"></div>
+					<div ng-if="group.photos.length == 2" style="width:40px;height:8px;float:left;"></div>
+					<img ng-repeat="pic in group.photos" ng-src="{{pic}}" img-load-error="img/exception/user-error.png">
+				</div>
+				<img ng-if="group.photos.length==1 && !group.photo" class="hx-group-avatar" ng-src="{{group.photos[0]}}" img-load-error="img/exception/preview-error.png" style="width: 40px;height: 40px;border-radius: 0;" >
+				<img ng-if="group.photo" class="hx-group-avatar" ng-src="{{group.photo}}" img-load-error="img/exception/preview-error.png" style="width: 40px;height: 40px;border-radius: 0;">
+				<h2 ng-bind="group.name" style="font-size: 15px;"></h2>
+				<i class="icon ion-ios-information-outline mf-blue-color" ng-click="enterGroupDetailPage(group,$event)"></i>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

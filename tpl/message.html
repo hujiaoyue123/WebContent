@@ -1,0 +1,86 @@
+<!-- 消息 -->
+<ion-view id="userMessagesView" view-title="消息">
+	<ion-content class="stable-bg" has-bouncing="true">
+		<!-- 连接聊天 -->
+		<div ng-if="chatState.state != 'loginOK'" style="text-align: center;color: #4CB8F3;">
+			<span ng-if="chatState.state == 'opening'" >正在连接服务器...</span>
+			<span ng-if="chatState.state == 'conflict'">该账号在其他地方登陆，您已断开连接</span>
+		</div>
+		<!-- 下拉刷新 -->
+		<ion-refresher on-refresh="onRefresh()"></ion-refresher>
+		<!-- 空白 -->
+		<div ng-if="!messages.length>0 && !notice" style="text-align: center;padding-top: 20px;font-size: 16px;color: #ddd;">暂无消息记录</div>
+		<ion-list>
+			<!-- 企业通告 -->
+			<ion-item ng-if="notice" class="item-avatar message-item item-icon-right" ng-click="noticeMessage()">
+				<img style="border-radius:50%;" src="img/notice.png">
+				<h2 style="line-height:20px;">通知公告</h2>
+				<span ng-if="notice.groupname" class="calm">[{{notice.groupname}}]</span>
+				<span ng-if="notice.title" ng-bind="notice.title"></span>
+				<i class="icon icon-accessory ion-ios-arrow-right"></i>
+			</ion-item>
+			<!-- 普通展示方式 -->
+			<div ng-if="!isHD">
+		        <ion-item class="item-avatar message-item" ng-repeat="conv in messages" ng-click="chat(conv)">
+		        	<!-- 群组消息 -->
+					<div ng-if="conv.type=='groupchat' && conv.peer.photos.length>1 && !conv.peer.avatar" class="hx-group-avatar">
+						<div ng-if="conv.peer.photos.length == 3" style="width:11px;height:1px; float:left;"></div>
+						<div ng-if="conv.peer.photos.length == 2" style="width:40px;height:11px;float:left;"></div>
+						<img ng-repeat="pic in conv.peer.photos" ng-src="{{pic}}" img-load-error="img/exception/user-error.png">
+					</div>
+					<img ng-if="conv.type=='groupchat' && conv.peer.photos.length==1 && !conv.peer.avatar" ng-src="{{conv.peer.photos[0]}}" img-load-error="img/exception/preview-error.png">
+					<!-- 用户/系统消息 -->
+					<img ng-if="conv.peer.avatar && conv.type=='chat'" style="border-radius:50%;" ng-src="{{conv.peer.avatar}}" img-load-error="img/exception/user-error.png">
+					<!-- 组织消息 -->
+					<img ng-if="conv.peer.avatar && conv.type!='chat'" class="square" ng-src="{{conv.peer.avatar}}" img-load-error="img/exception/preview-error.png">
+					<div ng-if="conv.unread" class="chat-badge">
+						<span>{{conv.unread>99?'···':conv.unread}}</span>
+					</div> 
+					<h2 style="line-height:20px;" ng-bind="conv.peer.name"></h2>
+					<span ng-if="conv.at" style="color:red;">[有人@我]</span><span ng-bind="conv.text"></span>
+					<!-- 置顶 -->
+					<ion-option-button ng-if="false" class="button-calm" ng-click="operate({action:'fixUp',msg:conv})">置顶</ion-option-button>
+					<!-- 删除 -->
+					<ion-option-button class="button-assertive" ng-click="operate({action:'deleteMsg',msg:conv})">删除</ion-option-button>
+				</ion-item>
+			</div>
+			<!-- HD展示方式 -->
+			<div ng-if="isHD">
+		        <ion-item class="item-avatar message-item item-hd" ng-repeat="conv in messages" ng-click="chat(conv)" ng-style="{'height': conv.showTool ? '112px' : '60px'}">
+					<!-- 群组消息 -->
+					<div ng-if="conv.type=='groupchat' && conv.peer.photos.length>1 && !conv.peer.avatar" class="hx-group-avatar">
+						<div ng-if="conv.peer.photos.length == 3" style="width:11px;height:1px; float:left;"></div>
+						<div ng-if="conv.peer.photos.length == 2" style="width:40px;height:11px;float:left;"></div>
+						<img ng-repeat="pic in conv.peer.photos" ng-src="{{pic}}" img-load-error="img/exception/user-error.png">
+					</div>
+					<img ng-if="conv.type=='groupchat' && conv.peer.photos.length==1 && !conv.peer.avatar" ng-src="{{conv.peer.photos[0]}}" img-load-error="img/exception/preview-error.png">
+					<!-- 用户/系统消息 -->
+					<img ng-if="conv.peer.avatar && conv.type=='chat'" style="border-radius:50%;" ng-src="{{conv.peer.avatar}}" img-load-error="img/exception/user-error.png">
+					<!-- 组织消息 -->
+					<img ng-if="conv.peer.avatar && conv.type!='chat'" class="square" ng-src="{{conv.peer.avatar}}" img-load-error="img/exception/preview-error.png">
+					<div ng-if="conv.unread" class="chat-badge">
+						<span>{{conv.unread>99?'···':conv.unread}}</span>
+					</div> 
+					<h2 style="line-height:20px;" ng-bind="conv.peer.name"></h2>
+					<span ng-if="conv.at" style="color:red;">[有人@我]</span><span ng-bind="conv.text"></span>
+					<!-- 下拉按钮 -->
+					<i class="item-right-icon dropButton" ng-click="operate({action: 'toolMenu',msg: conv,$event: $event})">
+						<i ng-if="!conv.showTool" class="icon ion-ios-arrow-down"></i>
+						<i ng-if="conv.showTool" class="icon ion-ios-arrow-up"></i>
+					</i>
+					<!-- 菜单栏 -->
+					<div ng-if="conv.showTool" class="row hx-flex-justify-content" ng-click="operate({$event: $event})">
+						<a class="col" ng-if="false" ng-click="operate({action: 'fixUp',msg: conv,$event: $event})">
+							<i class="ion-arrow-up-c"></i>
+							<span>置顶</span>
+						</a>
+						<a class="col red-color" ng-click="operate({action: 'deleteMsg',msg: conv,$event: $event})">
+							<i class="ion-ios-trash"></i>
+							<span>删除</span>
+						</a>				
+					</div>
+				</ion-item>
+			</div>
+		</ion-list>
+	</ion-content>
+</ion-view>

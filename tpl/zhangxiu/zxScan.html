@@ -1,0 +1,50 @@
+<!-- 掌秀设置 -->
+<ion-view hide-back-button="true" view-title="掌秀设置 ">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button class="button back-button buttons button-clear header-item" ng-click="goBackToMe()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text">我</span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<!-- 中央 -->
+	<ion-content class="stable-bg" has-bouncing="true">
+		<ion-list>
+			<!-- <ion-item class="item-divider">
+				<p>
+					搜索掌秀...
+					loading
+					<ion-spinner ng-if="true" icon="ios-small" style="position: absolute;top: 0;left: 80px;height: 100%;display: flex;align-items: left;"></ion-spinner>
+				</p>
+				<i class="icon" style="right: 16px;" ui-self="zxConnection">
+				 	<p  style="font-size: 12px;overflow: visible;">
+				 		<span ng-if="device.version">搜索不到？</span>
+				 	</p>
+				</i>
+			</ion-item> -->
+			
+			<ion-item class="item-icon-right item-divider">
+				<p>
+					搜索掌秀...
+					<!-- loading -->
+					<ion-spinner ng-if="true" icon="ios-small" style="position: absolute;top: 0;left: 80px;height: 100%;display: flex;align-items: left;"></ion-spinner>
+				</p>
+				<i class="icon" style="right: 16px;font-size:16px;" ng-click="scanNotFind($event)">
+					搜索不到？
+				<!-- <i class="icon icon-accessory "></i> -->
+			</ion-item>
+			<ion-item ng-if="findDevice.fond" class="item-icon-right item-divider">
+				<p>
+					点击进行掌秀设置
+				</p>
+			</ion-item>
+			
+			<!-- 搜索的掌秀列表 -->
+			<ion-item class="item-icon-left item-icon-right" ng-repeat="device in searchDeviceList | orderBy: 'name' track by $index" ng-click="goSetting(device,$event)">
+				<i class="icon mf-blue-color" ng-class="{'ion-ios-checkmark-outline': device.selected}" style="font-size: 24px;"></i>
+				{{device.name}}
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

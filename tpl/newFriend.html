@@ -1,0 +1,33 @@
+<!-- 添加好友 -->
+<ion-view view-title="添加好友">
+	<!-- 回退按钮 -->
+	<ion-nav-buttons side="left">
+		<button ui-sref="tab.contact" class="button back-button buttons  button-clear header-item">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i> 
+		</button>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<!-- 搜索 -->
+		<form name="searchForm">
+			<div class="bar item-input-inset search-bar">
+				<label class="item-input-wrapper">
+				<i class="icon  ion-ios-search-strong placeholder-icon"></i>
+				<input type="text" name="searchInput" placeholder="输入电话号码查找" autofocus="autofocus" ng-model="search.text" ui-validate="'verifyMobile($value)'" style="font-size: 12px;padding-left: 0;">
+	        	</label>
+	        	<div class="search-btn-wrap">
+					<button class="button" ng-click="searchUser(search.text)" ng-if="search.text">查找</button>
+				</div>
+	        </div>
+		</form>
+		<ion-list>
+			<ion-item class="item user-item item-button-right" ng-repeat="user in users" ng-click="operate({action:'clickuser',userid:user.id},$event)"> <!--  style="padding-top:1px;padding-bottom:1px;min-height:0px;" -->
+				<img ng-src="{{user.avatar}}">
+				<h2 style="line-height:20px;">{{user.username}}</h2>
+				<button ng-if="user.newUser" class="button button-balanced" style="line-height: 28px;min-height: 28px;font-size: 14px;top: 10px;"
+					ng-click="operate({'action':'addFriend','user':user})">添 加</button>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

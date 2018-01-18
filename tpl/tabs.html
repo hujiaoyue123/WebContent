@@ -1,0 +1,15 @@
+<!-- 底栏 -->
+<ion-tabs class="tabs-striped tabs-icon-top tabs-color-positive">
+	<ion-tab ng-if="true" title="文件库" icon-on="ion-ios-cloud" icon-off="ion-ios-cloud-outline" ui-sref="tab.ppan">
+		<ion-nav-view name="tab-ppan"></ion-nav-view>
+	</ion-tab>
+	<ion-tab ng-if="$root.CONFIG.internet" title="消息" icon-on="ion-ios-chatbubble" icon-off="ion-ios-chatbubble-outline" ui-sref="tab.message" badge="msgUnread" badge-style="badge-assertive opacity-1">
+		<ion-nav-view name="tab-message"></ion-nav-view>
+	</ion-tab>
+	<ion-tab ng-if="true" title="联系人" icon-on="ion-ios-people" icon-off="ion-ios-people-outline" ui-sref="tab.contact" badge="newInvite" badge-style="badge-assertive opacity-1">
+		<ion-nav-view name="tab-contact"></ion-nav-view>
+	</ion-tab>
+	<ion-tab ng-if="true" title="我" icon-on="ion-ios-person" icon-off="ion-ios-person-outline" ui-sref="tab.about" badge="updateVersion || showJdTip" badge-style="badge-assertive opacity-1" >
+		<ion-nav-view name="tab-about"></ion-nav-view>
+	</ion-tab>
+</ion-tabs>

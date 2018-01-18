@@ -1,0 +1,111 @@
+<!-- 企业升级 -->
+<ion-view view-title="填写企业认证信息" hide-back-button="true">
+	<ion-nav-buttons side="left">
+		<button class="button back-button buttons button-clear header-item" ng-click="$ionicGoBack()">
+			<i class="icon ion-ios-arrow-back">
+				<span class="back-text" ng-bind="$ionicHistory.backTitle()"></span>
+			</i>
+		</button>
+	</ion-nav-buttons>
+	<ion-content class="stable-bg" has-bouncing="true">
+		<!-- 未提交/验证未通过 -->
+		<ion-list class="list" ng-if="auth.type == 0 || auth.type == 2">
+		<form name="authform" novalidate>
+			<ion-item class="item item-divider">
+				基本信息	<h2 style="color: red" ng-if="auth.type == 2">{{auth.msg}}</h2>
+			</ion-item>
+			<ion-item class="item item-input">
+				<span class="input-label">营业执照</span>
+				<input type="text" placeholder="输入注册号" name="reg" ng-model="auth.reg" required ui-validate="'validFome($value)'">
+				<label style="color: red" ng-show="authform.reg.$error.validator">*</label>
+				<input type="hidden" ng-model="auth.groupid">
+				<input type="hidden" ng-model="auth.id">
+			</ion-item>
+			<ion-item class="item item-input">
+				<span class="input-label">联系地址</span>
+				<input type="text" placeholder="住所" name="address" ng-model="auth.address" required ui-validate="'validFome($value)'">
+				<label style="color: red" ng-show="authform.address.$error.validator">*</label>
+			</ion-item>
+			<ion-item class="item item-input">
+				<span class="input-label">网址</span>
+				<input type="url" placeholder="网址" name="site" ng-model="auth.site" required minlength="1" ui-validate="'validFome($value,$name)'">
+				<label style="color: red" ng-show="authform.site.$error.validator">*</label>
+			</ion-item>
+			<ion-item class="item item-input">
+				<span class="input-label">邮箱地址</span>
+				<input type="email" placeholder="邮箱地址" name="email" ng-model="auth.email" required ui-validate="'validFome($value,$name)'">
+				<label style="color: red" ng-show="authform.email.$error.validator">*</label>
+			</ion-item>
+			<ion-item class="item item-divider">
+				上传营业执照扫描件
+			</ion-item>
+			<ion-item class="item item-body">
+				<p>点击图片上传(jpg,png,bmp,jpeg)</p>
+				<center><img ng-src="{{auth.licenseimg}}" style="width: 150px;border: solid 1px #ddd;" ngf-select="upload($files,'license')" ngf-pattern="'image/*'"></center>
+			</ion-item>
+			<ion-item class="item item-divider">
+				上传本人正面身份证
+			</ion-item>
+			<ion-item class="item item-body">
+				<p>点击图片上传(jpg,png,bmp,jpeg)</p>
+				<center><img ng-src="{{auth.cardimg}}" style="width: 150px;border: solid 1px #ddd;" ngf-select="upload($files,'card')" ngf-pattern="'image/*'"></center>
+				<p>(验证完成后本人会成为企业管理员，身份证名称必须和本人当前用户名保持一致)</p>
+			</ion-item>
+			<ion-item class="padding">
+				<div class="row">
+					<div class="col">
+						<button type="submit" class="button button-block button-positive" ng-disabled="authform.$invalid" ng-click="submitAuth(auth,1)" style="background-color: rgb(76,184,243)">
+							提交
+						</button>
+					</div>
+					<div class="col">
+						<button type="submit" class="button button-block button-positive" ng-disabled="authform.$invalid" ng-click="submitAuth(auth,0)" style="background-color: rgb(76,184,243)">
+							保存
+						</button>
+					</div>
+				</div>
+			</ion-item>
+		</form>
+		</ion-list>
+		<!-- 已提交/验证已通过 -->
+		<ion-list class="list" ng-if="auth.type == 1 || auth.type == 3">
+			<ion-item class="item item-divider">
+				基本信息
+			</ion-item>
+			<ion-item class="item item-input">
+				<span class="input-label">营业执照</span>
+				<label>{{auth.reg}}</label>
+			</ion-item>
+			<ion-item class="item item-input">
+				<span class="input-label">联系地址</span>
+				<label>{{auth.address}}</label>
+			</ion-item>
+			<ion-item class="item item-input">
+				<span class="input-label">网址</span>
+				<label>{{auth.site}}</label>
+			</ion-item>
+			<ion-item class="item item-input">
+				<span class="input-label">邮箱地址</span>
+				<label>{{auth.email}}</label>
+			</ion-item>
+			<ion-item class="item item-divider">
+				营业执照扫描件
+			</ion-item>
+			<ion-item class="item item-body">
+				<center><img ng-src="{{auth.licenseimg}}" style="width: 150px;border: solid 1px #ddd;"></center>
+			</ion-item>
+			<ion-item class="item item-divider">
+				本人正面身份证
+			</ion-item>
+			<ion-item class="item item-body">
+				<center><img ng-src="{{auth.cardimg}}" style="width: 150px;border: solid 1px #ddd;"></center>
+			</ion-item>
+			<ion-item class="padding" ng-if="auth.type == 1">
+				<center><h1 style="color: red">验证中</h1></center>
+			</ion-item>
+			<ion-item class="padding" ng-if="auth.type == 3">
+				<center><h1 style="color: red">验证通过</h1></center>
+			</ion-item>
+		</ion-list>
+	</ion-content>
+</ion-view>

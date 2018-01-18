@@ -1,0 +1,83 @@
+<!-- PC登陆页 -->
+  <ion-view hide-nav-bar="true" view-title="掌文" class="logincss" id="lgn">
+    <div id="login-button" >
+		<img src="img/login/login-w-icon.png"></img>
+	</div>
+	
+	<!-- password login -->
+	<div id="container">
+		<h1>登  录</h1>
+		<span class="close-btn">
+		<img src="img/login/close.png"></img>
+		</span>
+		<form>
+			<input  name="loginname" type="text" ng-model="user.loginname"  placeholder="手机号码">
+			<input  type="password"  ng-model="user.password" placeholder="密码">
+			<button ng-click="USER.login()" href="javascript:void(0)">登  录</button>
+			<div id="remember-container">
+				<span id="codeLogin">验证码登录</span>
+				<span id="register">新用户注册</span>
+			</div>
+		</form>
+	</div>
+
+	<!--codeLogin-container-->
+	<div id="codeLogin-container">
+		<h1>登  录</h1>
+		<span class="close-btn">
+			<img src="img/login/close.png"></img>
+			</span>
+			<form>
+				<input name="mobileInput" type="text" placeholder="手机号码" ng-model="user.loginname" ng-focus="vfocus=true" ng-blur="vfocus=false" style="font-size:16px" ui-validate="'verifyMobile($value)'">
+				<i class="icon ion-checkmark-circled" style="color:green;" ng-show="verifyForm.mobileInput.$valid && (vfocus===false)"></i>
+				<i class="icon ion-close-circled" style="color:red;" ng-show="verifyForm.mobileInput.$error.validator && (vfocus===false)"></i>
+				<div style= "margin:0px auto;width:80%;display:flex;"> 
+					<input style="margin:0px;width:50%;height:36px;" ng-model="verify.validation" maxlength="6" placeholder="验证码">
+					<button  href="javascript:void(0)"  style="margin:0px;width:50%;height:36px;display:inline-block;background: rgba(107,255,3,0.3);font-size:13px;"
+						ng-click="USER.getVerifyCode('verify')" ng-disabled="!verify.enable">
+						<span style="margin:0px;padding:0px;border:0px;" ng-if="verify.enable">获取验证码</span>
+						<span style="margin:0px;padding:0px;border:0px;" ng-if="!verify.enable">({{verify.time}})</span>
+					</button>
+				</div>
+				<button ng-click="USER.verifyLogin()" href="javascript:void(0)">登  录</button>
+				<div id="remember-container">
+					<span id="pwdlogin">密码登录</span>
+					<span id="register1">新用户注册</span>
+				</div>
+			</form>
+	</div>
+
+	<!-- register Container -->
+	<div id="register-container">
+	   <h1>注  册</h1>
+	  <span class="close-btn">
+	    <img src="img/login/close.png"></img>
+	  </span>
+		<form name="registerForm" ng-submit="USER.register()">
+			<input name="mobileInput" type="text" placeholder="手机号" ng-model="user.loginname" ng-focus="rfocus=true" ng-blur="rfocus=false" required style="font-size:16px" ui-validate="'verifyMobile($value)'">
+			<div style= "margin:0px auto;width:80%;display:flex;"> 
+				<input style="margin:0px;width:50%;height:36px;" type="number" required ng-model="register.validation" maxlength="6" placeholder="验证码">
+					<button href="javascript:void(0)"  style="margin:0px;width:50%;height:36px;display:inline-block;background: rgba(107,255,3,0.3);font-size:13px;"
+						ng-click="USER.getVerifyCode('register')" ng-disabled="!register.enable">
+						<span style="margin:0px;padding:0px;border:0px;" ng-if="register.enable">获取验证码</span>
+						<span style="margin:0px;padding:0px;border:0px;" ng-if="!register.enable">({{register.time}})</span>
+					</button>
+			</div>
+			<input name="usernameInput" type="text" placeholder="姓名" maxlength="20" required ng-model="register.nickname" required style="font-size:16px;">
+			<input type="password" placeholder="输入密码" ng-model="register.password" required style="font-size:16px;">
+			<input type="password" placeholder="确认密码" ng-model="register.rePassword" required style="font-size:16px;">
+			<button type="submit" class="button button-block" style="background-color: rgb(107,255,3,0.3);padding: 0;height:36px;border: 0;border-radius: 8px;color: #fff;margin-top:0;">注　册</button>
+		</form>
+	</div>
+
+	<div id="stuff">
+		<div id="code-button" qrcode-animation>
+			<qrcode version="5" size="{{size}}" data="{{qrcodeList.android}}"></qrcode>
+		</div>
+		<p>掌文App</p>
+	</div>
+	<div class="copyright">
+		<p>微掌文公司 版权所有</p>
+		<p>Copyright ©2016 微掌文科技(北京)有限公司</p></div>
+ </ion-view>
+
